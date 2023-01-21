@@ -82,9 +82,10 @@ class Soldier:
         del self
 
 
-class Soldiers:
+class Enemies:
     def __init__(self):
         self.soldiers_list = []
+        self.soldier_spawn_chance = 0
 
     def add_soldier(self, location):
         self.soldiers_list.append(Soldier([location[0], location[1]]))
