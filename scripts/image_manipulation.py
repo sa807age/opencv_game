@@ -23,43 +23,50 @@ def create_blank_image(image_dimensions):
 
 
 def draw_image_on_image(main_image, image_to_draw, location, size):
-    # new_image_shape = (math.ceil(image_to_draw.shape[1]*size)+10, math.ceil(image_to_draw.shape[0]*size)+10)
-    # image_to_draw = cv.resize(image_to_draw, new_image_shape)
-    # x_offset, y_offset = location[1] - image_to_draw.shape[1]//2, location[0] - image_to_draw.shape[0]//2
-    # x_max = x_offset + image_to_draw.shape[1]
-    # y_max = y_offset + image_to_draw.shape[0]
-    # if x_offset < 0:
-    #     if x_max > main_image.shape[1]:
-    #         x_max = main_image.shape[1]
-    #     image_to_draw = image_to_draw[-1*x_offset:x_max, :, :]
-    #     x_offset = 0
-    # if y_offset < 0:
-    #     if y_offset > main_image.shape[0]:
-    #         y_max = main_image.shape[0]
-    #     image_to_draw = image_to_draw[:, -1*y_offset:y_max, :]
-    #     y_offset = 0
-    #     image_to_draw = image_to_draw[:, :y_max, :]
-    # alpha_s = image_to_draw[:y_max, :x_max, 3] / 255.0
-    # alpha_l = 1.0 - alpha_s
-    # for c in range(0, 3):
-    #     main_image[y_offset:y_max, x_offset:x_max, c] = \
-    #         (alpha_s * image_to_draw[:y_max, :x_max, c] +
-    #          alpha_l * main_image[y_offset:y_max, x_offset:x_max, c])
+    if size != 1:
+        image_to_draw = cv.resize(image_to_draw, (math.ceil(image_to_draw.shape[1]*size),
+                                                  math.ceil(image_to_draw.shape[0]*size)))
+    aim_x = location[0] - image_to_draw.shape[1]//2
+    aim_y = location[1] - image_to_draw.shape[0]//2
 
-    if location[1] <= -image_to_draw.shape[1]:
+    if aim_x <= -image_to_draw.shape[1]:
         return None
-    if location[0] <= -image_to_draw.shape[0]:
+    if aim_y <= -image_to_draw.shape[0]:
         return None
-    if location[1] >= image_to_draw.shape[1]:
+    if aim_x >= main_image.shape[1]:
         return None
-    if location[0] >= image_to_draw.shape[0]:
+    if aim_y >= main_image.shape[0]:
         return None
 
-    up_trim = -location[1] if location[1] < 0 else 0
-    left_trim = -location[0] if location[0] < 0 else 0
-    down_trim = -location[1] if location[1] < 0 else 0gf
-    right_trim = -location[0] if location[0] < 0 else 0
+    up_trim = -aim_y if aim_y < 0 else 0
+    left_trim = -aim_x if aim_x < 0 else 0
 
-    main_image[location[1]+up_trim:image_to_draw.shape[1]+location[1]-2,
-               location[0]+left_trim:image_to_draw.shape[0]+location[0], :] =\
-        image_to_draw[0+up_trim:image_to_draw.shape[1], 0+left_trim:image_to_draw.shape[0], :3]
+    right_trim = 0
+    main_right_location = image_to_draw.shape[1]+aim_x
+    if main_right_location > main_image.shape[1]:
+        right_trim = main_right_location - main_image.shape[1]
+        main_right_location = main_image.shape[1]
+
+    down_trim = 0
+    main_down_location = image_to_draw.shape[0]+aim_y
+    if main_down_location > main_image.shape[0]:
+        down_trim = main_down_location - main_image.shape[0]
+        main_down_location = main_image.shape[0]
+
+    main_left_location = aim_x + left_trim
+    main_up_location = aim_y + up_trim
+
+    second_left_location = left_trim
+    second_up_location = up_trim
+    second_right_location = image_to_draw.shape[1] - right_trim
+    second_down_location = image_to_draw.shape[0] - down_trim
+
+    part_to_draw = image_to_draw[second_up_location:second_down_location, second_left_location:second_right_location,
+                   :]
+
+    alpha_part = np.stack((part_to_draw[:, :, 3] / 255,)*3, axis=-1)
+    alpha_part_negative = 1 - alpha_part
+
+    main_image[main_up_location:main_down_location, main_left_location:main_right_location, :] = \
+        (part_to_draw[:, :, :3]*alpha_part +
+         main_image[main_up_location:main_down_location, main_left_location:main_right_location, :] * alpha_part_negative)

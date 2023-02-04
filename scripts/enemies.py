@@ -35,7 +35,7 @@ class Soldier:
             else:
                 self.y_location -= 1
         self.frames_lived += 1
-        self.size = (self.frames_lived * 0.005) ** 2
+        self.size = (self.frames_lived * 0.0015) ** 2
         self.bbox = [math.ceil(self.x_location - 10 * self.size),
                      math.ceil(self.y_location - 20 * self.size),
                      math.ceil(20 * self.size), math.ceil(40 * self.size)]
@@ -79,7 +79,7 @@ class Soldier:
         #
         #     cv.circle(photo, [self.x_location, self.y_location - math.ceil(5 * self.size)],
         #               math.ceil(2.5 * self.size), 0, -1)
-        draw_image_on_image(photo, self.image, (200, self.x_location), self.size)
+        draw_image_on_image(photo, self.image, (self.x_location, self.y_location), self.size)
 
     def kill(self, soldiers_list: list):
         sounds.death_sounds[random.randrange(0, 8)].play()
