@@ -11,13 +11,10 @@ from scripts.image_manipulation import draw_image_on_image
 
 soldiers_death_sounds = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'sounds',
                                         'death_sounds'))
-soldier_image = cv.imread('../media/photos/scary_soldier.webp', -1)
-soldier_image2 = cv.imread('../media/photos/scary_soldier2.webp', -1)
 
 
 class Soldier:
     def __init__(self, location):
-        self.image = soldier_image2
         self.frames_lived = 1
         self.x_location = int(location[0])
         self.y_location = int(location[1])
@@ -35,51 +32,50 @@ class Soldier:
             else:
                 self.y_location -= 1
         self.frames_lived += 1
-        self.size = (self.frames_lived * 0.0015) ** 2
+        self.size = (self.frames_lived * 0.005) ** 2
         self.bbox = [math.ceil(self.x_location - 10 * self.size),
                      math.ceil(self.y_location - 20 * self.size),
                      math.ceil(20 * self.size), math.ceil(40 * self.size)]
 
     def draw_on_image(self, photo):
-        # # head
-        # cv.circle(photo, [self.x_location, self.y_location - math.ceil(10*self.size)],
-        #           math.ceil(10*self.size), self.color, -1)
-        # # face
-        # cv.circle(photo, [self.x_location + math.ceil(5*self.size), self.y_location - math.ceil(10*self.size)],
-        #           math.ceil(0.2*self.size), 0, -1)
-        # cv.circle(photo, [self.x_location - math.ceil(5*self.size), self.y_location - math.ceil(10*self.size)],
-        #           math.ceil(0.2*self.size), 0, -1)
-        # # body
-        # cv.line(photo, [self.x_location, self.y_location],
-        #         [self.x_location, self.y_location + math.ceil(10*self.size)], self.color, math.ceil(1+1*self.size))
-        # cv.line(photo, [self.x_location, self.y_location + math.ceil(3*self.size)],
-        #         [self.x_location + math.ceil(10*self.size), self.y_location], self.color, math.ceil(1+1*self.size))
-        # cv.line(photo, [self.x_location, self.y_location + math.ceil(3*self.size)],
-        #         [self.x_location - math.ceil(10*self.size), self.y_location], self.color, math.ceil(1+1*self.size))
-        # cv.line(photo, [self.x_location, self.y_location + math.ceil(10*self.size)],
-        #         [self.x_location + math.ceil(7*self.size), self.y_location + math.ceil(20*self.size)],
-        #         self.color, math.ceil(1+1*self.size))
-        # cv.line(photo, [self.x_location, self.y_location + math.ceil(10*self.size)],
-        #         [self.x_location - math.ceil(7*self.size), self.y_location + math.ceil(20*self.size)],
-        #         self.color, math.ceil(1+1*self.size))
-        # # gun
-        # cv.line(photo, [self.x_location - math.ceil(10*self.size), self.y_location],
-        #         [self.x_location - math.ceil(10*self.size), self.y_location], (0, 0, 0), math.ceil(1+1*self.size))
-        # # bbox
-        # if self.frames_lived > 550:
-        #     cv.rectangle(photo, self.bbox[0:2], list(map(add, self.bbox[0:2], self.bbox[2:4])), 0, 1)
-        #
-        #     cv.line(photo, [self.x_location - math.ceil(6 * self.size), self.y_location - math.ceil(12.5 * self.size)],
-        #             [self.x_location - math.ceil(3.5 * self.size), self.y_location - math.ceil(11.5 * self.size)], 0,
-        #             math.ceil(0.5 * self.size))
-        #
-        #     cv.line(photo, [self.x_location + math.ceil(6 * self.size), self.y_location - math.ceil(12.5 * self.size)],
-        #             [self.x_location + math.ceil(3.5 * self.size), self.y_location - math.ceil(11.5 * self.size)], 0,
-        #             math.ceil(0.5 * self.size))
-        #
-        #     cv.circle(photo, [self.x_location, self.y_location - math.ceil(5 * self.size)],
-        #               math.ceil(2.5 * self.size), 0, -1)
-        draw_image_on_image(photo, self.image, (self.x_location, self.y_location), self.size)
+        # head
+        cv.circle(photo, [self.x_location, self.y_location - math.ceil(10*self.size)],
+                  math.ceil(10*self.size), self.color, -1)
+        # face
+        cv.circle(photo, [self.x_location + math.ceil(5*self.size), self.y_location - math.ceil(10*self.size)],
+                  math.ceil(0.2*self.size), 0, -1)
+        cv.circle(photo, [self.x_location - math.ceil(5*self.size), self.y_location - math.ceil(10*self.size)],
+                  math.ceil(0.2*self.size), 0, -1)
+        # body
+        cv.line(photo, [self.x_location, self.y_location],
+                [self.x_location, self.y_location + math.ceil(10*self.size)], self.color, math.ceil(1+1*self.size))
+        cv.line(photo, [self.x_location, self.y_location + math.ceil(3*self.size)],
+                [self.x_location + math.ceil(10*self.size), self.y_location], self.color, math.ceil(1+1*self.size))
+        cv.line(photo, [self.x_location, self.y_location + math.ceil(3*self.size)],
+                [self.x_location - math.ceil(10*self.size), self.y_location], self.color, math.ceil(1+1*self.size))
+        cv.line(photo, [self.x_location, self.y_location + math.ceil(10*self.size)],
+                [self.x_location + math.ceil(7*self.size), self.y_location + math.ceil(20*self.size)],
+                self.color, math.ceil(1+1*self.size))
+        cv.line(photo, [self.x_location, self.y_location + math.ceil(10*self.size)],
+                [self.x_location - math.ceil(7*self.size), self.y_location + math.ceil(20*self.size)],
+                self.color, math.ceil(1+1*self.size))
+        # gun
+        cv.line(photo, [self.x_location - math.ceil(10*self.size), self.y_location],
+                [self.x_location - math.ceil(10*self.size), self.y_location], (0, 0, 0), math.ceil(1+1*self.size))
+        # bbox
+        if self.frames_lived > 550:
+            cv.rectangle(photo, self.bbox[0:2], list(map(add, self.bbox[0:2], self.bbox[2:4])), 0, 1)
+
+            cv.line(photo, [self.x_location - math.ceil(6 * self.size), self.y_location - math.ceil(12.5 * self.size)],
+                    [self.x_location - math.ceil(3.5 * self.size), self.y_location - math.ceil(11.5 * self.size)], 0,
+                    math.ceil(0.5 * self.size))
+
+            cv.line(photo, [self.x_location + math.ceil(6 * self.size), self.y_location - math.ceil(12.5 * self.size)],
+                    [self.x_location + math.ceil(3.5 * self.size), self.y_location - math.ceil(11.5 * self.size)], 0,
+                    math.ceil(0.5 * self.size))
+
+            cv.circle(photo, [self.x_location, self.y_location - math.ceil(5 * self.size)],
+                      math.ceil(2.5 * self.size), 0, -1)
 
     def kill(self, soldiers_list: list):
         sounds.death_sounds[random.randrange(0, 8)].play()

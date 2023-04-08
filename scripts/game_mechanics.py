@@ -1,5 +1,5 @@
 import random
-import time
+import numpy as np
 from copy import copy
 import os
 
@@ -8,8 +8,9 @@ import keyboard as kb
 from cv2 import LINE_AA
 
 from scripts import sounds
-from scripts.image_manipulation import resize_image, translate_image, create_blank_image
+from scripts.image_manipulation import resize_image, translate_image
 from scripts.particles import create_particles, display_all_particles, delete_all_particles
+from scripts.utils import waste_time
 
 sounds_folder = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', 'sounds'))
 
@@ -47,7 +48,7 @@ def move_aim_breath(aim, breath, scope_y_movement):
 
 def scope_zoom_animation(zoom, image, scope_aim, soldiers):
     zoom_dict = {'in': (1, 21, 1), 'out': (20, -1, -1)}
-    blank_image = create_blank_image((image.shape[0], image.shape[1]))
+    blank_image = np.zeros((image.shape[0], image.shape[1]), dtype=np.uint8)
     sounds.click1.play()
     cv.waitKey(50)
     # zooming in
@@ -70,7 +71,7 @@ def scope_zoom_animation(zoom, image, scope_aim, soldiers):
 
 
 def create_sniper_scope_image(image, scope_aim, zoom):
-    blank_image = create_blank_image((image.shape[0], image.shape[1]))
+    blank_image = np.zeros((image.shape[0], image.shape[1]), dtype=np.uint8)
     resized_image = resize_image(image, zoom)
     resized_and_moved_image = translate_image(resized_image, image.shape[0] / zoom - scope_aim[0] * zoom,
                                               image.shape[1] / zoom - scope_aim[1] * zoom,
@@ -143,3 +144,7 @@ def draw_launcher_scope(image, location):
     cv.circle(image, location, 30, (0, 255, 0), 1)
     cv.line(image, (location[0] - 10, location[1]), (location[0] + 10, location[1]), (0, 0, 255), 1, LINE_AA)
     cv.line(image, (location[0], location[1] - 10), (location[0], location[1] + 10), (0, 0, 255), 1, LINE_AA)
+
+
+
+
