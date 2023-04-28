@@ -100,7 +100,7 @@ def shoot_missile(image, location, soldiers):
     for i in range(100):
         frame = resize_image(image, 1)
         bomb_bbox = [int(location[0] - i * 0.4), int(location[1] - i * 0.4), i, i]
-        soldiers.try_to_kill(bomb_bbox)
+        soldiers.try_to_hit(bomb_bbox)
         soldiers.display_all_soldiers(frame)
         display_all_particles(all_particles, frame)
         cv.rectangle(frame, [int(location[0]-i*0.4), int(location[1]-i*0.4)],
@@ -112,7 +112,7 @@ def shoot_missile(image, location, soldiers):
 
 def shoot_bullet(image, scope_aim, soldiers):
     sounds.sniper_shot.play()
-    soldiers.try_to_kill(scope_aim)
+    soldiers.try_to_hit(scope_aim)
     for i in range(3):
         frame = copy(image)
         scope_aim[1] -= 20

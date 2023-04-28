@@ -12,7 +12,7 @@ def show_selection(selection, text_number):
 
 
 def welcome_screen():
-    video = cv.VideoCapture('media/videos/bunker.mp4')
+    video = cv.VideoCapture('../media/videos/bunker.mp4')
     opening_sound.play()
     frame = None
     for _ in range(100):
