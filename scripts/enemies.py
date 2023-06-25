@@ -70,7 +70,7 @@ class Soldier(Enemy):
         self.bbox = [math.ceil(self.location[0] - 10 * self.size),
                      math.ceil(self.location[1] - 20 * self.size),
                      math.ceil(20 * self.size), math.ceil(40 * self.size)]
-        self.arrow_color = (0, int(255*(1000-self.frames_lived)/1000), int(255*self.frames_lived/1000))
+        self.arrow_color = (0, int(255*(1600-self.frames_lived)/1600), int(255*self.frames_lived/1600))
 
     def draw_on_image(self, photo):
         self.show_arrow(photo)

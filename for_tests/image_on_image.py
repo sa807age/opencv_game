@@ -2,7 +2,7 @@ import cv2 as cv
 from copy import deepcopy
 from scripts.game_mechanics import move_aim
 
-from scripts.image_manipulation import draw_image_on_image
+from scripts.utils import draw_image_on_image
 
 if __name__ == '__main__':
     background_image = '../media/photos/big floppa.jpg'

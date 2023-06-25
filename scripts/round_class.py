@@ -2,12 +2,16 @@ import copy
 import cv2 as cv
 import keyboard as kb
 import random
-from new_game.weapons import Weapon
-from new_game.enemies import Enemies
+
+from scripts.cut_scenes import you_won_animation, you_lose_animation
+from scripts.weapons import Weapon
+from scripts.enemies import Enemies
+from scripts.time_and_score import TimeCountdown
 
 
 class Round:
-    def __init__(self, image, sniper_max_ammo, launcher_ammo, sniper_zoom):
+    def __init__(self, image, sniper_max_ammo, launcher_ammo, sniper_zoom, time, round_music, horizon_line,
+                 soldier_spawn_rate):
         self.original_image = image
         self.image_size = (self.original_image.shape[:2])
         self.aim = [self.original_image.shape[0]//2, self.original_image.shape[1]//2]
@@ -16,6 +20,10 @@ class Round:
         self.breath = 0
         self.scope_y_movement = 1
         self.weapon = Weapon(sniper_max_ammo, launcher_ammo, sniper_zoom, self.aim, self.enemies.enemies_list)
+        self.timer = TimeCountdown(time)
+        self.round_music = round_music
+        self.horizon_line = horizon_line
+        self.soldier_spawn_rate = soldier_spawn_rate
 
     def move_aim(self, pixels_to_move):
         if kb.is_pressed("w"):
@@ -44,21 +52,29 @@ class Round:
         self.breath += self.scope_y_movement
 
     def start_round(self):
-        health = 5
+        self.round_music.play()
         while True:
             if kb.is_pressed('c'):
-                break
+                quit()
             if self.weapon.current_weapon == 'sniper':
                 self.move_aim_breath()
                 self.move_aim(10//self.weapon.sniper_zoom)
             else:
                 self.move_aim(10)
             frame = copy.copy(self.original_image[self.aim[1]-500:self.aim[1]+500, self.aim[0]-500:self.aim[0]+500, :])
-            if random.randrange(0, 400) == 0:
-                self.enemies.add_soldier([self.original_image.shape[0]//2, self.original_image.shape[1]//2])
-            health_down = self.enemies.update_frame(frame)
-            if health_down:
-                health -= 1
+            if random.randrange(0, int(1/self.soldier_spawn_rate)) == 0:
+                self.enemies.add_soldier([random.randrange(600, self.original_image.shape[1]-600),
+                                          random.randrange(self.horizon_line - 100, self.horizon_line + 100)])
+            you_lose = self.enemies.update_frame(frame)
+            if you_lose:
+                if you_lose_animation(frame):
+                    return False
+                quit()
             frame = self.weapon.update_frame(frame)
+            you_won = self.timer.display_time(frame)
+            if you_won:
+                if you_won_animation(frame):
+                    return True
+                quit()
             cv.imshow('game', frame)
             cv.waitKey(5)

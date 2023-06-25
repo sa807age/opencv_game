@@ -119,7 +119,7 @@ class Weapon:
     def reload(self):
         if self.animation_index is None:
             self.animation_index = 1
-        if self.animation_index % 100 == 0:
+        if self.animation_index % 75 == 0:
             sounds.click1.play()
             self.sniper_ammo += 1
             self.animation_index += 1
@@ -180,5 +180,8 @@ class Weapon:
             if kb.is_pressed('space'):
                 sounds.rocket.play()
                 self.status = 'missile_animation'
+            if kb.is_pressed('r'):
+                sounds.reloading.play()
+                self.current_weapon = 'reloading'
             frame = self.draw_launcher_scope(frame)
         return frame

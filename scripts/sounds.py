@@ -48,6 +48,11 @@ death_sound8.set_volume(0.5)
 death_sounds = [death_sound1, death_sound2, death_sound3, death_sound4,
                 death_sound5, death_sound6, death_sound7, death_sound8]
 
+worms_music = pygame.mixer.Sound(os.path.join(sounds_folder, 'worms_music.mp3'))
+worms_music.set_volume(0.3)
+
+you_win = pygame.mixer.Sound(os.path.join(sounds_folder, 'you_win.mp3'))
+
 
 if __name__ == '__main__':
     sounds = copy(vars())

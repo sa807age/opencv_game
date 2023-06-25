@@ -1,7 +1,7 @@
 import random
 from copy import copy
 import cv2 as cv
-from scripts.image_manipulation import draw_image_on_image
+from scripts.utils import draw_image_on_image
 
 
 class Heart:
