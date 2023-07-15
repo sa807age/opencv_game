@@ -1,8 +1,7 @@
 keyboard==0.13.5
-numpy==1.23.5
-opencv-contrib-python==4.5.5.64
-pip==22.3.1
-pipreqs==0.4.11
-playsound==1.2.2
-pygame
+numpy==1.25.1
+opencv-contrib-python==4.8.0.74
+pip==23.2
+pipreqs==0.4.13
+pygame==2.5.0
 

@@ -18,14 +18,12 @@ class Enemy:
         self.frames_lived = 1
         self.aim = aim
         self.location = location
-        self.relative_location = [500 - aim_point + location_point for aim_point, location_point in
-                                  zip(self.aim, self.location)]
+        self.relative_location = [600 - self.aim[0] + self.location[0], 400 - self.aim[1] + self.location[1]]
         self.arrow_color = (0, 0, 255)
         self.death_sound = None
 
     def update_relative_location(self):
-        self.relative_location = [500 - aim_point + location_point for aim_point, location_point in
-                                  zip(self.aim, self.location)]
+        self.relative_location = [600 - self.aim[0] + self.location[0], 400 - self.aim[1] + self.location[1]]
 
     def kill(self, enemies_list: list):
         self.death_sound.play()
@@ -33,18 +31,18 @@ class Enemy:
         del self
 
     def show_arrow(self, frame):
-        if not (500 > self.location[0] - self.aim[0] > -500 and 500 > self.location[1] - self.aim[1] > -500):
+        if not (600 > self.location[0] - self.aim[0] > -600 and 400 > self.location[1] - self.aim[1] > -400):
             direction_vector = np.array([self.location[0] - self.aim[0], self.location[1] - self.aim[1]])
             vector_size = np.linalg.norm(direction_vector)
             normalized_vector = (direction_vector/vector_size)
-            arrow_point = [int(point) for point in (normalized_vector * 450) + 500]
+            arrow_point = [int((normalized_vector[0] * 550) + 600), int((normalized_vector[1] * 350) + 400)]
             rotated_vector1 = rotate_vector(normalized_vector, 135) * (1/math.sqrt(vector_size)) * 2000
             rotated_vector2 = rotate_vector(normalized_vector, -135) * (1/math.sqrt(vector_size)) * 2000
-            cv.line(frame, arrow_point, [arrow_point[0] + int(rotated_vector1[0]),
-                                         arrow_point[1] + int(rotated_vector1[1])],
+            cv.line(frame, arrow_point, [int(arrow_point[0]) + int(rotated_vector1[0]),
+                                         int(arrow_point[1]) + int(rotated_vector1[1])],
                     self.arrow_color, 10)
-            cv.line(frame, arrow_point, [arrow_point[0] + int(rotated_vector2[0]),
-                                         arrow_point[1] + int(rotated_vector2[1])],
+            cv.line(frame, arrow_point, [int(arrow_point[0]) + int(rotated_vector2[0]),
+                                         int(arrow_point[1]) + int(rotated_vector2[1])],
                     self.arrow_color, 10)
 
 
@@ -73,9 +71,7 @@ class Soldier(Enemy):
         self.arrow_color = (0, int(255*(1600-self.frames_lived)/1600), int(255*self.frames_lived/1600))
 
     def draw_on_image(self, photo):
-        self.show_arrow(photo)
-        # head
-        cv.circle(photo, [self.relative_location[0], self.relative_location[1] - math.ceil(10 * self.size)],
+        cv.circle(photo, [int(self.relative_location[0]), int(self.relative_location[1] - math.ceil(10 * self.size))],
                   math.ceil(10*self.size), self.color, -1)
         # face
         cv.circle(photo, [self.relative_location[0] + math.ceil(5 * self.size),

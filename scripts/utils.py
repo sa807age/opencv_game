@@ -1,19 +1,21 @@
 import math
 from copy import copy
+
+import cv2
 import cv2 as cv
 import numpy as np
 
 
 def check_rectangles_collision(bbox1, bbox2):
-    bbox2_points = ((bbox2[0], bbox2[1]), (bbox2[0]+bbox2[2], bbox2[1]), (bbox2[0], bbox2[1]+bbox2[3]),
-                    (bbox2[0]+bbox2[2], bbox2[1]+bbox2[3]))
+    bbox2_points = ((bbox2[0], bbox2[1]), (bbox2[0] + bbox2[2], bbox2[1]), (bbox2[0], bbox2[1] + bbox2[3]),
+                    (bbox2[0] + bbox2[2], bbox2[1] + bbox2[3]))
     for point in bbox2_points:
-        if bbox1[0] < point[0] < bbox1[0]+bbox1[2] and bbox1[1] < point[1] < bbox1[1]+bbox1[3]:
+        if bbox1[0] < point[0] < bbox1[0] + bbox1[2] and bbox1[1] < point[1] < bbox1[1] + bbox1[3]:
             return True
 
 
 def waste_time(frame, soldiers, time_to_waste):
-    for i in range(int(time_to_waste*1000//20)):
+    for i in range(int(time_to_waste * 1000 // 20)):
         new_frame = copy(frame)
         soldiers.display_all_soldiers(new_frame)
         cv.imshow("game", new_frame)
@@ -53,13 +55,10 @@ def translate_image(image, right_movement, down_movement, output_dimansions):
 
 def draw_image_on_image(main_image, image_to_draw, location, size=1):
     if size != 1:
-        image_to_draw = cv.resize(image_to_draw, (math.ceil(image_to_draw.shape[1]*size),
-                                                  math.ceil(image_to_draw.shape[0]*size)))
-    aim_x = location[0] - image_to_draw.shape[1]//2
-    aim_y = location[1] - image_to_draw.shape[0]//2
-
-    mask = np.zeros([*main_image.shape[:2]], np.uint8)
-    blank_image = np.zeros([*main_image.shape[:2], 3], np.uint8)
+        image_to_draw = cv.resize(image_to_draw, (math.ceil(image_to_draw.shape[1] * size),
+                                                  math.ceil(image_to_draw.shape[0] * size)))
+    aim_x = location[0] - image_to_draw.shape[1] // 2
+    aim_y = location[1] - image_to_draw.shape[0] // 2
 
     if aim_x + image_to_draw.shape[1] <= 0 or aim_x >= main_image.shape[1]:
         return None
@@ -69,10 +68,10 @@ def draw_image_on_image(main_image, image_to_draw, location, size=1):
     up_trim = -min(aim_y, 0)
     left_trim = -min(aim_x, 0)
 
-    main_right_location = min(image_to_draw.shape[1]+aim_x, main_image.shape[1])
+    main_right_location = min(image_to_draw.shape[1] + aim_x, main_image.shape[1])
     right_trim = max(main_right_location - main_image.shape[1], 0)
 
-    main_down_location = min(image_to_draw.shape[0]+aim_y, main_image.shape[0])
+    main_down_location = min(image_to_draw.shape[0] + aim_y, main_image.shape[0])
     down_trim = max(main_down_location - main_image.shape[0], 0)
 
     main_left_location = aim_x + left_trim
@@ -84,9 +83,10 @@ def draw_image_on_image(main_image, image_to_draw, location, size=1):
     second_down_location = image_to_draw.shape[0] - down_trim
 
     part_to_draw = image_to_draw[second_up_location:second_down_location, second_left_location:second_right_location, :]
-    mask[main_up_location:main_down_location, main_left_location:main_right_location] = part_to_draw[:, :, 3]
-    mask = (mask == 255)
-    blank_image[main_up_location:main_down_location, main_left_location:main_right_location] = part_to_draw[:, :, :3]
+    mask = part_to_draw[:, :, 3] > 100  # Check if alpha channel is non-zero
+    mask = np.expand_dims(mask, axis=2)
+    mask = np.repeat(mask, 3, axis=2)
+    main_part = main_image[main_up_location:main_down_location, main_left_location:main_right_location]
 
-    main_image[mask] = blank_image[mask]
+    main_part[mask] = part_to_draw[:, :, :3][mask]
     return True

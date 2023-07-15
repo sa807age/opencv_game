@@ -41,11 +41,11 @@ def welcome_screen():
             else:
                 quit()
 
-        if keyboard.is_pressed('w'):
+        if keyboard.is_pressed('up'):
             click2.play()
             select -= 1 if select > 1 else 0
 
-        if keyboard.is_pressed('s'):
+        if keyboard.is_pressed('down'):
             click2.play()
             select += 1 if select < 3 else 0
 
@@ -63,7 +63,7 @@ def you_won_animation(frame):
 
     sounds.mixer.stop()
     you_win.play()
-    cv.putText(frame, 'YOU LIVED', (200, 400), 1, 5, (100, 255, 100), 10)
+    cv.putText(frame, 'YOU WON', (200, 200), 1, 5, (100, 255, 100), 10)
     cv.imshow('game', frame)
     cv.waitKey(20)
     time.sleep(1)
@@ -77,16 +77,16 @@ def you_won_animation(frame):
             elif select == 2:
                 return False
 
-        if keyboard.is_pressed('w'):
+        if keyboard.is_pressed('up'):
             click2.play()
             select -= 1 if select > 1 else 0
 
-        if keyboard.is_pressed('s'):
+        if keyboard.is_pressed('down'):
             click2.play()
             select += 1 if select < 2 else 0
 
-        cv.putText(frame_copy, 'Continue', (200, 500), 3, 2, show_selection(select, 1), thickness=4)
-        cv.putText(frame_copy, 'Quit (like a bitch)', (200, 600), 3, 2, show_selection(select, 2), thickness=3)
+        cv.putText(frame_copy, 'Continue', (200, 400), 3, 2, show_selection(select, 1), thickness=4)
+        cv.putText(frame_copy, 'Quit (like a bitch)', (200, 500), 3, 2, show_selection(select, 2), thickness=3)
 
         cv.imshow('game', frame_copy)
         cv.waitKey(200)
@@ -97,7 +97,7 @@ def you_lose_animation(frame):
         return [0, 0, 255] if selection == text_number else [0, 0, 150]
     sounds.mixer.stop()
     sounds.death_sound1.play()
-    cv.putText(frame, 'YOU DIED', (200, 400), 1, 5, (100, 100, 255), 10)
+    cv.putText(frame, 'YOU DIED', (200, 200), 1, 5, (100, 100, 255), 10)
     cv.imshow('game', frame)
     cv.waitKey(20)
     time.sleep(1)
@@ -111,16 +111,16 @@ def you_lose_animation(frame):
             elif select == 2:
                 return False
 
-        if keyboard.is_pressed('w'):
+        if keyboard.is_pressed('up'):
             click2.play()
             select -= 1 if select > 1 else 0
 
-        if keyboard.is_pressed('s'):
+        if keyboard.is_pressed('down'):
             click2.play()
             select += 1 if select < 2 else 0
 
-        cv.putText(frame_copy, 'Try Again', (200, 500), 3, 2, show_selection(select, 1), thickness=4)
-        cv.putText(frame_copy, 'Quit (like a bitch)', (200, 600), 3, 2, show_selection(select, 2), thickness=3)
+        cv.putText(frame_copy, 'Try Again', (200, 400), 3, 2, show_selection(select, 1), thickness=4)
+        cv.putText(frame_copy, 'Quit (like a bitch)', (200, 500), 3, 2, show_selection(select, 2), thickness=3)
 
         cv.imshow('game', frame_copy)
         cv.waitKey(200)

@@ -10,20 +10,34 @@ sounds_folder = 'media/sounds' if os.path.exists('media/sounds') else '../media/
 
 mixer = pygame.mixer
 
-game_music = pygame.mixer.Sound(os.path.join(sounds_folder, 'game_music.mp3'))
-game_music.set_volume(0.3)
+# music
+game_music1 = pygame.mixer.Sound(os.path.join(sounds_folder, 'music', 'SilentHill.mp3'))
+game_music1.set_volume(0.3)
+game_music2 = pygame.mixer.Sound(os.path.join(sounds_folder, 'music', 'Final Fantasy X - To Zanarkand Remix.mp3'))
+game_music2.set_volume(0.3)
+game_music3 = pygame.mixer.Sound(os.path.join(sounds_folder, 'music', 'FF9 Battle (Fredrik Miller Trance Mix).mp3'))
+game_music3.set_volume(0.3)
+game_music4 = pygame.mixer.Sound(os.path.join(sounds_folder, 'music', 'Aeriths Theme Remix.mp3'))
+game_music4.set_volume(0.3)
+
+opening_sound = pygame.mixer.Sound(os.path.join(sounds_folder, 'opening_sounds', 'bunker.mp3'))
+
+# sound effects
 click1 = pygame.mixer.Sound(os.path.join(sounds_folder, 'click.mp3'))
 click2 = pygame.mixer.Sound(os.path.join(sounds_folder, 'click2.mp3'))
 explosion = pygame.mixer.Sound(os.path.join(sounds_folder, 'explosion.mp3'))
 night_vision = pygame.mixer.Sound(os.path.join(sounds_folder, 'night.mp3'))
 rocket = pygame.mixer.Sound(os.path.join(sounds_folder, 'rocket.mp3'))
+rocket.set_volume(0.5)
 sniper_shot = pygame.mixer.Sound(os.path.join(sounds_folder, 'sniper.mp3'))
 sniper_shot.set_volume(0.3)
 no_ammo = pygame.mixer.Sound(os.path.join(sounds_folder, 'no_ammo.mp3'))
 reloading = pygame.mixer.Sound(os.path.join(sounds_folder, 'reloading.mp3'))
 screaming = pygame.mixer.Sound(os.path.join(sounds_folder, 'screaming.mp3'))
-opening_sound = pygame.mixer.Sound(os.path.join(sounds_folder, 'opening_sounds', 'bunker.mp3'))
+you_win = pygame.mixer.Sound(os.path.join(sounds_folder, 'you_win.mp3'))
 
+
+# death sounds
 death_sound1 = pygame.mixer.Sound(os.path.join(sounds_folder, 'death_sounds', 'death_sound1.mp3'))
 death_sound2 = pygame.mixer.Sound(os.path.join(sounds_folder, 'death_sounds', 'death_sound2.mp3'))
 
@@ -47,19 +61,3 @@ death_sound8.set_volume(0.5)
 
 death_sounds = [death_sound1, death_sound2, death_sound3, death_sound4,
                 death_sound5, death_sound6, death_sound7, death_sound8]
-
-worms_music = pygame.mixer.Sound(os.path.join(sounds_folder, 'worms_music.mp3'))
-worms_music.set_volume(0.3)
-
-you_win = pygame.mixer.Sound(os.path.join(sounds_folder, 'you_win.mp3'))
-
-
-if __name__ == '__main__':
-    sounds = copy(vars())
-    for sound in sounds.values():
-        try:
-            sound.play()
-            time.sleep(1)
-            sound.padeout(2000)
-        except AttributeError:
-            pass

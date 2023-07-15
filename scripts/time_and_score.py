@@ -11,5 +11,5 @@ class TimeCountdown:
 
     def display_time(self, frame):
         self.time_left = self.total_time + math.floor(self.starting_time - time.time())
-        cv.putText(frame, f'Time left: {self.time_left}', (10, 15), 1, 1, (0, 255, 0), 2)
+        cv.putText(frame, f'Time left: {self.time_left}', (10, 30), 4, 1, (0, 130, 0), 2)
         return True if self.time_left < 1 else False
