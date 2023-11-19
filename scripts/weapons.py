@@ -46,8 +46,12 @@ class Weapon:
         blank_image = np.zeros((800, 1200), dtype=np.uint8)
         sniper_mask = cv.circle(blank_image, (600, 400), 300, 255, -1)
         image_with_scope = cv.bitwise_and(frame, frame, mask=sniper_mask)
-        cv.line(image_with_scope, (400, 400), (800, 400), 0, 1, cv.LINE_AA)
-        cv.line(image_with_scope, (600, 300), (600, 600), 0, 1, cv.LINE_AA)
+        cv.line(image_with_scope, (550, 400), (650, 400), (0, 0, 255), 1, cv.LINE_AA)
+        cv.line(image_with_scope, (600, 350), (600, 450), (0, 0, 255), 1, cv.LINE_AA)
+        cv.line(image_with_scope, (560, 460), (640, 460), (0, 255, 0), 1, cv.LINE_AA)
+        cv.line(image_with_scope, (570, 490), (630, 490), (0, 255, 0), 1, cv.LINE_AA)
+        cv.line(image_with_scope, (580, 520), (620, 520), (0, 255, 0), 1, cv.LINE_AA)
+
         return image_with_scope
 
     def scope_zoom_in(self, frame):

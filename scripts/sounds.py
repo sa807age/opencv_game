@@ -21,6 +21,12 @@ game_music4 = pygame.mixer.Sound(os.path.join(sounds_folder, 'music', 'Aeriths T
 game_music4.set_volume(0.3)
 
 opening_sound = pygame.mixer.Sound(os.path.join(sounds_folder, 'opening_sounds', 'bunker.mp3'))
+zombies_sound = pygame.mixer.Sound(os.path.join(sounds_folder, 'opening_sounds', 'zombies.mp3'))
+
+
+first_speech = pygame.mixer.Sound(os.path.join(sounds_folder, 'tutorial_sounds', 'first_speech.mp3'))
+last_speech = pygame.mixer.Sound(os.path.join(sounds_folder, 'tutorial_sounds', 'last_speech.mp3'))
+
 
 # sound effects
 click1 = pygame.mixer.Sound(os.path.join(sounds_folder, 'click.mp3'))

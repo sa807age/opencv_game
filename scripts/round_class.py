@@ -16,7 +16,7 @@ class Round:
                  soldier_spawn_rate, headers):
         self.original_image = image
         self.image_size = (self.original_image.shape[:2])
-        self.aim = [self.original_image.shape[0]//2, self.original_image.shape[1]//2]
+        self.aim = [self.original_image.shape[0] // 2, self.original_image.shape[1] // 2]
         self.enemies = Enemies(self.aim)
         self.particles = None
         self.breath = 0
@@ -55,6 +55,33 @@ class Round:
 
         self.breath += self.scope_y_movement
 
+    def load_frame(self):
+        if self.weapon.current_weapon == 'sniper':
+            self.move_aim_breath()
+            self.move_aim(15 // self.weapon.sniper_zoom)
+        else:
+            self.move_aim(15)
+        frame = copy.deepcopy(self.original_image[self.aim[1] - 400:self.aim[1] + 400,
+                              self.aim[0] - 600:self.aim[0] + 600, :])
+        if random.randrange(0, int(1 / self.soldier_spawn_rate)) == 0:
+            self.enemies.add_soldier([random.randrange(600, self.original_image.shape[1] - 600),
+                                      random.randrange(self.horizon_line - 100, self.horizon_line + 100)])
+        you_lose = self.enemies.update_frame(frame)
+        if you_lose:
+            if you_lose_animation(frame):
+                return False
+            quit()
+        frame = self.weapon.update_frame(frame)
+        you_won = self.timer.display_time(frame)
+        if you_won:
+            if you_won_animation(frame):
+                return True
+            quit()
+        for enemy in self.enemies.enemies_list:
+            enemy.show_arrow(frame)
+
+        return frame
+
     def start_round(self):
         index = 0
         if self.round_music:
@@ -62,34 +89,12 @@ class Round:
         while True:
             if kb.is_pressed('esc'):
                 quit()
-            if self.weapon.current_weapon == 'sniper':
-                self.move_aim_breath()
-                self.move_aim(15//self.weapon.sniper_zoom)
-            else:
-                self.move_aim(15)
-            frame = copy.deepcopy(self.original_image[self.aim[1]-400:self.aim[1]+400,
-                                  self.aim[0]-600:self.aim[0]+600, :])
-            if random.randrange(0, int(1/self.soldier_spawn_rate)) == 0:
-                self.enemies.add_soldier([random.randrange(600, self.original_image.shape[1]-600),
-                                          random.randrange(self.horizon_line - 100, self.horizon_line + 100)])
-            you_lose = self.enemies.update_frame(frame)
-            if you_lose:
-                if you_lose_animation(frame):
-                    return False
-                quit()
-            frame = self.weapon.update_frame(frame)
-            you_won = self.timer.display_time(frame)
-            if you_won:
-                if you_won_animation(frame):
-                    return True
-                quit()
-            for enemy in self.enemies.enemies_list:
-                enemy.show_arrow(frame)
+            frame = self.load_frame()
             if index < 200:
-                header_position = (frame.shape[1]//2, frame.shape[0]//2)
-                cv.putText(frame, self.headers[0], (header_position[0]-150, header_position[1]-200), 5, 3,
+                header_position = (frame.shape[1] // 2, frame.shape[0] // 2)
+                cv.putText(frame, self.headers[0], (header_position[0] - 150, header_position[1] - 200), 5, 3,
                            (150, 150, 150), 3)
-                cv.putText(frame, self.headers[1], (header_position[0]-150, header_position[1]-100), 5, 2,
+                cv.putText(frame, self.headers[1], (header_position[0] - 150, header_position[1] - 100), 5, 2,
                            (100, 100, 100), 3)
                 index += 1
 

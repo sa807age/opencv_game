@@ -4,7 +4,7 @@ from copy import copy
 import keyboard
 
 from scripts import sounds
-from scripts.sounds import click2, opening_sound, you_win
+from scripts.sounds import click2, opening_sound, you_win, zombies_sound
 
 
 def welcome_screen():
@@ -13,6 +13,7 @@ def welcome_screen():
 
     video = cv.VideoCapture('media/videos/bunker.mp4')
     opening_sound.play()
+    zombies_sound.play()
     frame = None
     for _ in range(100):
         if keyboard.is_pressed('q'):
@@ -22,7 +23,7 @@ def welcome_screen():
         cv.imshow('game', frame)
         cv.waitKey(24)
 
-    cv.putText(frame, 'Shoot to live', (200, 200), 3, 3, (0, 0, 70), 3)
+    cv.putText(frame, 'Zombies Mayhem', (150, 200), 3, 3, (0, 120, 70), 3)
     cv.imshow('game', frame)
     cv.waitKey(1)
     time.sleep(1)
@@ -41,11 +42,11 @@ def welcome_screen():
             else:
                 quit()
 
-        if keyboard.is_pressed('up'):
+        if keyboard.is_pressed('w'):
             click2.play()
             select -= 1 if select > 1 else 0
 
-        if keyboard.is_pressed('down'):
+        if keyboard.is_pressed('s'):
             click2.play()
             select += 1 if select < 3 else 0
 
@@ -54,7 +55,7 @@ def welcome_screen():
         cv.putText(frame_copy, 'Quit', (200, 500), 3, 2, show_selection(select, 3), thickness=3)
 
         cv.imshow('game', frame_copy)
-        cv.waitKey(200)
+        cv.waitKey(100)
 
 
 def you_won_animation(frame):
@@ -77,11 +78,11 @@ def you_won_animation(frame):
             elif select == 2:
                 return False
 
-        if keyboard.is_pressed('up'):
+        if keyboard.is_pressed('w'):
             click2.play()
             select -= 1 if select > 1 else 0
 
-        if keyboard.is_pressed('down'):
+        if keyboard.is_pressed('s'):
             click2.play()
             select += 1 if select < 2 else 0
 
@@ -111,11 +112,11 @@ def you_lose_animation(frame):
             elif select == 2:
                 return False
 
-        if keyboard.is_pressed('up'):
+        if keyboard.is_pressed('w'):
             click2.play()
             select -= 1 if select > 1 else 0
 
-        if keyboard.is_pressed('down'):
+        if keyboard.is_pressed('s'):
             click2.play()
             select += 1 if select < 2 else 0
 

@@ -98,14 +98,9 @@ class Soldier(Enemy):
                 [self.relative_location[0] - math.ceil(7 * self.size),
                  self.relative_location[1] + math.ceil(20 * self.size)],
                 self.color, math.ceil(1+1*self.size))
-        # gun
-        cv.line(photo, [self.relative_location[0] - math.ceil(10 * self.size), self.relative_location[1]],
-                [self.relative_location[0] - math.ceil(10 * self.size), self.relative_location[1]],
-                (0, 0, 0), math.ceil(1 + 1 * self.size))
+
         # bbox
         if self.frames_lived > 1400:
-            # cv.rectangle(photo, self.bbox[0:2], list(map(add, self.bbox[0:2], self.bbox[2:4])), 0, 1)
-
             cv.line(photo, [self.relative_location[0] - math.ceil(6 * self.size),
                             self.relative_location[1] - math.ceil(12.5 * self.size)],
                     [self.relative_location[0] - math.ceil(3.5 * self.size),
