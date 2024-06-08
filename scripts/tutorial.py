@@ -35,7 +35,7 @@ def display_text(image, text):
 def play_tutorial():
     round_img_path = 'media/photos/first_round.jpg'
     round_img = cv.imread(round_img_path)
-    tutorial_round = Round(image=round_img, sniper_max_ammo=5, launcher_ammo=3, sniper_zoom=2, time=100,
+    tutorial_round = Round(image=round_img, sniper_max_ammo=5, launcher_ammo=3, sniper_zoom=2, time=-1,
                            round_music=game_music1, horizon_line=2600, soldier_spawn_rate=1 / 1000000000,
                            headers=['Tutorial', ''])
     # adjustment time phase
@@ -186,7 +186,6 @@ def show_first_speech(time_from_start, frame):
         display_text(frame, "Are you ready, soldier?")
     if 23.2 < time_from_start < 26:
         display_text(frame, "Let's do this.")
-    cv.putText(frame, str(time_from_start), (20, 150), 3, 3, (70, 70, 70), 1)
 
 
 def show_last_speech(time_from_start, frame):
@@ -202,7 +201,6 @@ def show_last_speech(time_from_start, frame):
         display_text(frame, "The fate of the base rests on your shoulders.")
     if 17.3 < time_from_start < 20:
         display_text(frame, "Good luck, and may you come back in one piece.")
-    if 20 < time_from_start < 23:
+    if 20 < time_from_start < 22:
         display_text(frame, "Dismissed!")
-    cv.putText(frame, str(time_from_start), (20, 150), 3, 3, (70, 70, 70), 1)
 

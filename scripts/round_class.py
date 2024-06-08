@@ -58,9 +58,9 @@ class Round:
     def load_frame(self):
         if self.weapon.current_weapon == 'sniper':
             self.move_aim_breath()
-            self.move_aim(15 // self.weapon.sniper_zoom)
+            self.move_aim(5 // self.weapon.sniper_zoom)
         else:
-            self.move_aim(15)
+            self.move_aim(5)
         frame = copy.deepcopy(self.original_image[self.aim[1] - 400:self.aim[1] + 400,
                               self.aim[0] - 600:self.aim[0] + 600, :])
         if random.randrange(0, int(1 / self.soldier_spawn_rate)) == 0:
@@ -90,6 +90,10 @@ class Round:
             if kb.is_pressed('esc'):
                 quit()
             frame = self.load_frame()
+            if frame is True:
+                return True
+            if frame is False:
+                return False
             if index < 200:
                 header_position = (frame.shape[1] // 2, frame.shape[0] // 2)
                 cv.putText(frame, self.headers[0], (header_position[0] - 150, header_position[1] - 200), 5, 3,
