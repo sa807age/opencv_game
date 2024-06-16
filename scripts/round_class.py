@@ -1,6 +1,7 @@
 import copy
 import time
 
+import numpy as np
 import cv2 as cv
 import keyboard as kb
 import random
@@ -29,7 +30,15 @@ class Round:
         self.soldier_spawn_rate = soldier_spawn_rate
         self.headers = headers
 
-    def move_aim(self, pixels_to_move):
+    def move_aim(self, pixels_to_move) -> None:
+        """
+        moves the aim point according to player input
+        Parameters
+        ----------
+        pixels_to_move [int]: how many pixels to move each frame
+        Returns
+        -------
+        """
         if kb.is_pressed("w"):
             self.aim[1] -= pixels_to_move if self.aim[1] > 410 else 0
         if kb.is_pressed("s"):
@@ -39,29 +48,37 @@ class Round:
         if kb.is_pressed("a"):
             self.aim[0] -= pixels_to_move if self.aim[0] > 620 else 0
 
-    def move_aim_breath(self):
-        if self.breath > 100:
-            self.scope_y_movement = -1
-        if self.breath < 0:
-            self.scope_y_movement = 1
-
+    def move_aim_breath(self) -> None:
+        """
+        when in scope, mimics the player breath
+        Returns
+        -------
+        """
+        # switch direction of breath
+        if self.breath in [100, -100]:
+            self.scope_y_movement = -np.sign(self.breath)
+        # move scope up or down
         if self.image_size[0] - 410 > self.aim[1] > 410:
             self.aim[1] += random.randrange(0, 2) * self.scope_y_movement
-
-        scope_x_movement = random.randrange(1, 6)
-        if scope_x_movement == 4:
-            self.aim[0] += 1 if self.aim[0] < self.image_size[1] - 620 else 0
-        if scope_x_movement == 5:
-            self.aim[0] -= 1 if self.aim[0] > 620 else 0
-
+        # x have a 20 percent chance to move to each side randomly
+        scope_x_movement = random.randrange(-1, 4)//3
+        if 620 < self.aim[0] < self.image_size[1] - 620:
+            self.aim[0] += scope_x_movement
+        # increase or decrease breath
         self.breath += self.scope_y_movement
 
-    def load_frame(self):
+    def load_frame(self) -> np.array | bool:
+        """
+        create a not frame from current round data, when round is over, return true if won and false if not
+        Returns
+        -------
+        """
+        # move the aim location from input, also apply breathing movement when in sniper mode
+        aim_move_speed = 5
         if self.weapon.current_weapon == 'sniper':
             self.move_aim_breath()
-            self.move_aim(5 // self.weapon.sniper_zoom)
-        else:
-            self.move_aim(5)
+            aim_move_speed = 5 // self.weapon.sniper_zoom
+        self.move_aim(aim_move_speed)
         frame = copy.deepcopy(self.original_image[self.aim[1] - 400:self.aim[1] + 400,
                               self.aim[0] - 600:self.aim[0] + 600, :])
         if random.randrange(0, int(1 / self.soldier_spawn_rate)) == 0:
