@@ -6,7 +6,7 @@ import cv2 as cv
 import keyboard as kb
 import random
 
-from scripts.utils import put_round_text
+from scripts.utils import put_round_text, probability_two, probability
 from scripts.cut_scenes import you_won_animation, you_lose_animation
 from scripts.weapons import Weapon
 from scripts.enemies import Enemies
@@ -61,13 +61,13 @@ class Round:
         if self.image_size[0] - 410 > self.aim[1] > 410:
             self.aim[1] += random.randrange(0, 2) * self.scope_y_movement
         # x have a 20 percent chance to move to each side randomly
-        scope_x_movement = random.randrange(-1, 4)//3
+        left, right = probability_two(0.2, 0.2)
         if 620 < self.aim[0] < self.image_size[1] - 620:
-            self.aim[0] += scope_x_movement
+            self.aim[0] = self.aim[0] - int(left) + int(right)
         # increase or decrease breath
         self.breath += self.scope_y_movement
 
-    def load_frame(self) -> np.array | bool:
+    def load_frame(self) -> [np.array, bool]:
         """
         create a not frame from current round data, when round is over, return true if won and false if not
         Returns

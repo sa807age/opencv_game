@@ -1,6 +1,5 @@
 import math
-from copy import copy
-
+from random import random
 import cv2 as cv
 import numpy as np
 
@@ -62,3 +61,13 @@ def put_round_text(frame, big_text, small_text):
                5, 3, (150, 150, 150), 3)
     cv.putText(frame, small_text, (header_position[0] - 150, header_position[1] - 100),
                5, 2, (100, 100, 100), 3)
+
+
+def probability(prob):
+    return random() < prob
+
+
+def probability_two(prob1, prob2) -> [bool, bool]:
+    result = random()
+    return result < prob1, prob1 < result < prob1 + prob2
+
