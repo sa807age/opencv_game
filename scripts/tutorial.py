@@ -81,8 +81,8 @@ def play_tutorial():
         cv.imshow('game', frame)
         cv.waitKey(5)
         zombie_bbox = tutorial_round.enemies.enemies_list[0].bbox
-        if (zombie_bbox[0] < tutorial_round.aim[0] < zombie_bbox[0] + zombie_bbox[2] and
-                zombie_bbox[1] < tutorial_round.aim[1] < zombie_bbox[1] + zombie_bbox[3]):
+        if (zombie_bbox[0] < tutorial_round.aim.x < zombie_bbox[0] + zombie_bbox[2] and
+                zombie_bbox[1] < tutorial_round.aim.y < zombie_bbox[1] + zombie_bbox[3]):
             break
     frame = tutorial_round.load_frame()
     cv.putText(frame, 'Press Q to use Scope', (300, 100), 3, 2, (0, 0, 0), 3)
@@ -99,8 +99,8 @@ def play_tutorial():
         frame = tutorial_round.load_frame()
         cv.imshow('game', frame)
         cv.waitKey(5)
-        if (zombie_bbox[0] < tutorial_round.aim[0] < zombie_bbox[0] + zombie_bbox[2] and
-                zombie_bbox[1] < tutorial_round.aim[1] < zombie_bbox[1] + zombie_bbox[3]):
+        if (zombie_bbox[0] < tutorial_round.aim.x < zombie_bbox[0] + zombie_bbox[2] and
+                zombie_bbox[1] < tutorial_round.aim.y < zombie_bbox[1] + zombie_bbox[3]):
             break
     frame = tutorial_round.load_frame()
     cv.putText(frame, 'Press Space to Shoot', (250, 100), 3, 2, (255, 255, 255), 3)

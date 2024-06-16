@@ -6,6 +6,7 @@ import cv2 as cv
 import keyboard as kb
 import random
 
+from scripts.aim import Aim
 from scripts.utils import put_round_text, probability_two, probability
 from scripts.cut_scenes import you_won_animation, you_lose_animation
 from scripts.weapons import Weapon
@@ -15,57 +16,14 @@ from scripts.time_and_score import TimeCountdown
 
 class Round:
     def __init__(self, image, sniper_max_ammo, launcher_ammo, sniper_zoom, time, round_music, horizon_line,
-                 soldier_spawn_rate, headers):
+                 spawn_rate, headers):
         self.original_image = image
-        self.image_size = (self.original_image.shape[:2])
-        self.aim = [self.original_image.shape[0] // 2, self.original_image.shape[1] // 2]
-        self.enemies = Enemies(self.aim)
-        self.particles = None
-        self.breath = 0
-        self.scope_y_movement = 1
+        self.aim = Aim(image)
+        self.enemies = Enemies(self.aim, spawn_rate, image.shape, horizon_line)
         self.weapon = Weapon(sniper_max_ammo, launcher_ammo, sniper_zoom, self.aim, self.enemies.enemies_list)
         self.timer = TimeCountdown(time)
         self.round_music = round_music
-        self.horizon_line = horizon_line
-        self.soldier_spawn_rate = soldier_spawn_rate
         self.headers = headers
-
-    def move_aim(self, pixels_to_move) -> None:
-        """
-        moves the aim point according to player input
-        Parameters
-        ----------
-        pixels_to_move [int]: how many pixels to move each frame
-        Returns
-        -------
-        """
-        if kb.is_pressed("w"):
-            self.aim[1] -= pixels_to_move if self.aim[1] > 410 else 0
-        if kb.is_pressed("s"):
-            self.aim[1] += pixels_to_move if self.aim[1] < self.image_size[0] - 410 else 0
-        if kb.is_pressed("d"):
-            self.aim[0] += pixels_to_move if self.aim[0] < self.image_size[1] - 620 else 0
-        if kb.is_pressed("a"):
-            self.aim[0] -= pixels_to_move if self.aim[0] > 620 else 0
-
-    def move_aim_breath(self) -> None:
-        """
-        when in scope, mimics the player breath
-        Returns
-        -------
-        """
-        # switch direction of breath
-        if self.breath in [100, -100]:
-            self.scope_y_movement = -np.sign(self.breath)
-        # move scope up or down
-        if self.image_size[0] - 410 > self.aim[1] > 410:
-            self.aim[1] += random.randrange(0, 2) * self.scope_y_movement
-        # x have a 20 percent chance to move to each side randomly
-        left, right = probability_two(0.2, 0.2)
-        if 620 < self.aim[0] < self.image_size[1] - 620:
-            self.aim[0] = self.aim[0] - int(left) + int(right)
-        # increase or decrease breath
-        self.breath += self.scope_y_movement
 
     def load_frame(self) -> [np.array, bool]:
         """
@@ -76,14 +34,15 @@ class Round:
         # move the aim location from input, also apply breathing movement when in sniper mode
         aim_move_speed = 5
         if self.weapon.current_weapon == 'sniper':
-            self.move_aim_breath()
+            self.aim.move_aim_breath()
             aim_move_speed = 5 // self.weapon.sniper_zoom
-        self.move_aim(aim_move_speed)
-        frame = copy.deepcopy(self.original_image[self.aim[1] - 400:self.aim[1] + 400,
-                              self.aim[0] - 600:self.aim[0] + 600, :])
-        if probability(self.soldier_spawn_rate):
-            self.enemies.add_soldier([random.randrange(600, self.original_image.shape[1] - 600),
-                                      random.randrange(self.horizon_line - 100, self.horizon_line + 100)])
+        self.aim.move_aim(aim_move_speed)
+        # create a blank frame from image and aim location
+        frame = copy.deepcopy(self.original_image[self.aim.y - 400:self.aim.y + 400,
+                              self.aim.x - 600:self.aim.x + 600, :])
+        # maybe add zombie
+        self.enemies.maybe_add_soldier()
+        # check if zombies got to player
         you_lose = self.enemies.update_frame(frame)
         if you_lose:
             if you_lose_animation(frame):

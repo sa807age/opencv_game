@@ -17,12 +17,12 @@ class Enemy:
         self.frames_lived = 1
         self.aim = aim
         self.location = location
-        self.relative_location = [600 - self.aim[0] + self.location[0], 400 - self.aim[1] + self.location[1]]
+        self.relative_location = [600 - self.aim.x + self.location.x, 400 - self.aim.x + self.location[1]]
         self.arrow_color = (0, 0, 255)
         self.death_sound = None
 
     def update_relative_location(self):
-        self.relative_location = [600 - self.aim[0] + self.location[0], 400 - self.aim[1] + self.location[1]]
+        self.relative_location = [600 - self.aim.y + self.location[0], 400 - self.aim.y + self.location[1]]
 
     def kill(self, enemies_list: list):
         self.death_sound.play()
@@ -30,8 +30,8 @@ class Enemy:
         del self
 
     def show_arrow(self, frame):
-        if not (600 > self.location[0] - self.aim[0] > -600 and 400 > self.location[1] - self.aim[1] > -400):
-            direction_vector = np.array([self.location[0] - self.aim[0], self.location[1] - self.aim[1]])
+        if not (600 > self.location[0] - self.aim.x > -600 and 400 > self.location[1] - self.aim.y > -400):
+            direction_vector = np.array([self.location[0] - self.aim.y, self.location[1] - self.aim.y])
             vector_size = np.linalg.norm(direction_vector)
             normalized_vector = (direction_vector/vector_size)
             arrow_point = [int((normalized_vector[0] * 550) + 600), int((normalized_vector[1] * 350) + 400)]
@@ -117,13 +117,18 @@ class Soldier(Enemy):
 
 
 class Enemies:
-    def __init__(self, aim):
+    def __init__(self, aim, spawn_chance, image_shape, horizon_line):
         self.enemies_list = []
-        self.soldier_spawn_chance = 0
+        self.spawn_chance = spawn_chance
+        self.image_shape = image_shape
         self.aim = aim
+        self.horizon_line = horizon_line
 
-    def add_soldier(self, location):
-        self.enemies_list.append(Soldier([location[0], location[1]], self.aim))
+    def maybe_add_soldier(self):
+        if probability(self.spawn_chance):
+            location = [random.randrange(600, self.image_shape[1] - 600),
+                        random.randrange(self.horizon_line - 100, self.horizon_line + 100)]
+            self.enemies_list.append(Soldier(location, self.aim))
 
     def update_frame(self, frame):
         health_down = False

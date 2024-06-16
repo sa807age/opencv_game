@@ -98,10 +98,10 @@ class Weapon:
         if self.animation_index is None:
             self.animation_index = 1
         elif self.animation_index < 4:
-            self.aim[1] -= 20
-            self.aim[0] += random.randrange(-20, 20) if self.aim[0] > 620 else 0
+            self.aim.y -= 20
+            self.aim.x += random.randrange(-20, 20)
         else:
-            self.aim[1] += 3
+            self.aim.y += 3
         if self.animation_index == 24:
             if self.current_weapon == 'launcher':
                 self.status = 'launcher'
@@ -115,7 +115,7 @@ class Weapon:
         if self.animation_index is None:
             self.animation_index = 1
         elif self.animation_index < 15:
-            self.aim[1] -= 30 - self.animation_index*2
+            self.aim.y -= 30 - self.animation_index*2
         else:
             pass
         if self.animation_index == 50:
@@ -126,8 +126,8 @@ class Weapon:
 
     def shoot_bullet(self):
         for enemy in self.enemies_list:
-            if enemy.bbox[0] < self.aim[0] < enemy.bbox[0] + enemy.bbox[2] and enemy.bbox[1] <\
-                    self.aim[1] < enemy.bbox[1] + enemy.bbox[3]:
+            if enemy.bbox[0] < self.aim.x < enemy.bbox[0] + enemy.bbox[2] and enemy.bbox[1] <\
+                    self.aim.y < enemy.bbox[1] + enemy.bbox[3]:
                 enemy.kill(self.enemies_list)
                 break
 
