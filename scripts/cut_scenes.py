@@ -74,9 +74,9 @@ def you_won_animation(frame):
         if keyboard.is_pressed('space'):
             click2.play()
             if select == 1:
-                return True
+                return
             elif select == 2:
-                return False
+                quit()
 
         if keyboard.is_pressed('w'):
             click2.play()
@@ -108,9 +108,9 @@ def you_lose_animation(frame):
         if keyboard.is_pressed('space'):
             click2.play()
             if select == 1:
-                return True
+                return
             elif select == 2:
-                return False
+                quit()
 
         if keyboard.is_pressed('w'):
             click2.play()

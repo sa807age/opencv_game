@@ -45,15 +45,13 @@ class Round:
         # check if zombies got to player
         you_lose = self.enemies.update_frame(frame)
         if you_lose:
-            if you_lose_animation(frame):
-                return False
-            quit()
+            you_lose_animation(frame)
+            return False
         frame = self.weapon.update_frame(frame)
-        you_won = self.timer.display_time(frame)
-        if you_won:
-            if you_won_animation(frame):
-                return True
-            quit()
+        times_up = self.timer.display_time(frame)
+        if times_up:
+            you_won_animation(frame)
+            return True
         for enemy in self.enemies.enemies_list:
             enemy.show_arrow(frame)
 
