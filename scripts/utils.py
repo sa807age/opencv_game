@@ -5,14 +5,6 @@ import cv2 as cv
 import numpy as np
 
 
-def waste_time(frame, soldiers, time_to_waste):
-    for i in range(int(time_to_waste * 1000 // 20)):
-        new_frame = copy(frame)
-        soldiers.display_all_soldiers(new_frame)
-        cv.imshow("game", new_frame)
-        cv.waitKey(20)
-
-
 def rotate_vector(vector, angle):
     # Convert angle to radians
     angle = np.deg2rad(angle)
@@ -23,20 +15,6 @@ def rotate_vector(vector, angle):
     # Rotate vector
     rotated_vector = np.dot(rot_matrix, vector)
     return rotated_vector
-
-
-def resize_image(frame, scale):
-    width = int(frame.shape[1] * scale)
-    height = int(frame.shape[0] * scale)
-
-    dimensions = (width, height)
-
-    return cv.resize(frame, dimensions, interpolation=cv.INTER_AREA)
-
-
-def translate_image(image, right_movement, down_movement, output_dimansions):
-    transmat = np.float32([[1, 0, right_movement], [0, 1, down_movement]])
-    return cv.warpAffine(image, transmat, output_dimansions)
 
 
 def draw_image_on_image(main_image, image_to_draw, location, size=1):
