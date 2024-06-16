@@ -1,9 +1,11 @@
 import copy
+import time
+
 import cv2 as cv
 import keyboard as kb
 import random
 
-
+from scripts.utils import put_round_text
 from scripts.cut_scenes import you_won_animation, you_lose_animation
 from scripts.weapons import Weapon
 from scripts.enemies import Enemies
@@ -81,25 +83,35 @@ class Round:
 
         return frame
 
-    def start_round(self):
-        index = 0
+    def round_intro(self):
+        # start round music
         if self.round_music:
             self.round_music.play()
+        counter = time.perf_counter()
+        # play the game with text for 4 seconds
+        while time.perf_counter()-counter < 4:
+            if kb.is_pressed('esc'):
+                quit()
+            frame = self.load_frame()
+            put_round_text(frame, self.headers[0], self.headers[1])
+            cv.imshow('game', frame)
+            cv.waitKey(5)
+
+    def start_round(self):
+        self.round_intro()
         while True:
             if kb.is_pressed('esc'):
                 quit()
             frame = self.load_frame()
-            if frame is True:
-                return True
-            if frame is False:
-                return False
-            if index < 200:
-                header_position = (frame.shape[1] // 2, frame.shape[0] // 2)
-                cv.putText(frame, self.headers[0], (header_position[0] - 150, header_position[1] - 200), 5, 3,
-                           (150, 150, 150), 3)
-                cv.putText(frame, self.headers[1], (header_position[0] - 150, header_position[1] - 100), 5, 2,
-                           (100, 100, 100), 3)
-                index += 1
-
+            # if frame is not np.Array: that means that the game is over
+            if isinstance(frame, bool):
+                return frame
             cv.imshow('game', frame)
             cv.waitKey(5)
+
+    def play_round(self):
+        result = False
+        while not result:
+            result = self.start_round()
+
+

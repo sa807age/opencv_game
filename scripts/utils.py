@@ -54,3 +54,11 @@ def draw_image_on_image(main_image, image_to_draw, location, size=1):
 
     main_part[mask] = part_to_draw[:, :, :3][mask]
     return True
+
+
+def put_round_text(frame, big_text, small_text):
+    header_position = (frame.shape[1] // 2, frame.shape[0] // 2)
+    cv.putText(frame, big_text, (header_position[0] - 150, header_position[1] - 200),
+               5, 3, (150, 150, 150), 3)
+    cv.putText(frame, small_text, (header_position[0] - 150, header_position[1] - 100),
+               5, 2, (100, 100, 100), 3)
