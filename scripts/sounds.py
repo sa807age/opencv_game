@@ -1,7 +1,5 @@
 import pygame
 import os
-import time
-from copy import copy
 
 pygame.init()
 pygame.mixer.init()
@@ -18,7 +16,7 @@ game_music2.set_volume(0.3)
 game_music3 = pygame.mixer.Sound(os.path.join(sounds_folder, 'music', 'FF9 Battle (Fredrik Miller Trance Mix).mp3'))
 game_music3.set_volume(0.3)
 game_music4 = pygame.mixer.Sound(os.path.join(sounds_folder, 'music', 'Aeriths Theme Remix.mp3'))
-game_music4.set_volume(0.3)
+game_music4.set_volume(0.7)
 
 opening_sound = pygame.mixer.Sound(os.path.join(sounds_folder, 'opening_sounds', 'bunker.mp3'))
 zombies_sound = pygame.mixer.Sound(os.path.join(sounds_folder, 'opening_sounds', 'zombies.mp3'))
@@ -36,7 +34,7 @@ night_vision = pygame.mixer.Sound(os.path.join(sounds_folder, 'night.mp3'))
 rocket = pygame.mixer.Sound(os.path.join(sounds_folder, 'rocket.mp3'))
 rocket.set_volume(0.5)
 sniper_shot = pygame.mixer.Sound(os.path.join(sounds_folder, 'sniper.mp3'))
-sniper_shot.set_volume(0.3)
+sniper_shot.set_volume(0.1)
 no_ammo = pygame.mixer.Sound(os.path.join(sounds_folder, 'no_ammo.mp3'))
 reloading = pygame.mixer.Sound(os.path.join(sounds_folder, 'reloading.mp3'))
 screaming = pygame.mixer.Sound(os.path.join(sounds_folder, 'screaming.mp3'))
