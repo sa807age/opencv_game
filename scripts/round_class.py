@@ -81,7 +81,7 @@ class Round:
         self.move_aim(aim_move_speed)
         frame = copy.deepcopy(self.original_image[self.aim[1] - 400:self.aim[1] + 400,
                               self.aim[0] - 600:self.aim[0] + 600, :])
-        if random.randrange(0, int(1 / self.soldier_spawn_rate)) == 0:
+        if probability(self.soldier_spawn_rate):
             self.enemies.add_soldier([random.randrange(600, self.original_image.shape[1] - 600),
                                       random.randrange(self.horizon_line - 100, self.horizon_line + 100)])
         you_lose = self.enemies.update_frame(frame)
