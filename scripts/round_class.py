@@ -3,7 +3,6 @@ import cv2 as cv
 import keyboard as kb
 import random
 
-import numpy as np
 
 from scripts.cut_scenes import you_won_animation, you_lose_animation
 from scripts.weapons import Weapon

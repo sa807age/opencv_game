@@ -7,7 +7,7 @@ import cv2 as cv
 import numpy as np
 
 from scripts import sounds
-from scripts.utils import check_rectangles_collision, rotate_vector
+from scripts.utils import rotate_vector
 
 soldiers_death_sounds = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'sounds',
                                         'death_sounds'))
