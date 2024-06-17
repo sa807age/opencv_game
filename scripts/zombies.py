@@ -5,7 +5,7 @@ import random
 import cv2 as cv
 import numpy as np
 
-from scripts import sounds
+from scripts.sounds import death_sounds
 from scripts.utils import rotate_vector, probability
 
 soldiers_death_sounds = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'sounds',
@@ -14,7 +14,6 @@ soldiers_death_sounds = os.path.abspath(os.path.join(os.path.dirname(__file__), 
 
 class Zombie:
     def __init__(self, location):
-        self.death_sound = sounds.death_sounds[random.randrange(0, 8)]
         self.frames_lived = 1
         self.location = location
         self.color = [random.randrange(0, 50), random.randrange(0, 255), random.randrange(0, 50)]
@@ -24,7 +23,7 @@ class Zombie:
         return [600 - aim.x + self.location[0], 400 - aim.y + self.location[1]]
 
     def kill(self, enemies_list: list):
-        self.death_sound.play()
+        death_sounds[random.randrange(0, 8)].play()
         enemies_list.remove(self)
         del self
 
