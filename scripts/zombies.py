@@ -5,7 +5,7 @@ import random
 import cv2 as cv
 import numpy as np
 
-from scripts.sounds import death_sounds
+from scripts.sounds import death_sounds, screaming
 from scripts.utils import rotate_vector, probability
 
 soldiers_death_sounds = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'sounds',
@@ -125,7 +125,7 @@ class Zombies:
             enemy.draw_on_image(frame, self.aim)
             enemy.update()
             if isinstance(enemy, Zombie) and enemy.frames_lived == 1400:
-                sounds.screaming.play()
+                screaming.play()
             if isinstance(enemy, Zombie) and enemy.frames_lived > 1700:
                 if enemy.frames_lived % 300 == 0:
                     health_down = True
