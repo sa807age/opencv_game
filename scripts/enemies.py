@@ -17,7 +17,7 @@ class Enemy:
         self.frames_lived = 1
         self.aim = aim
         self.location = location
-        self.relative_location = [600 - self.aim.x + self.location.x, 400 - self.aim.x + self.location[1]]
+        self.relative_location = [600 - self.aim.x + self.location[0], 400 - self.aim.x + self.location[1]]
         self.arrow_color = (0, 0, 255)
         self.death_sound = None
 
