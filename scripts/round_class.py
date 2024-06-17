@@ -52,9 +52,6 @@ class Round:
         if times_up:
             you_won_animation(frame)
             return True
-        for enemy in self.enemies.enemies_list:
-            enemy.draw_arrow(frame, self.aim)
-
         return frame
 
     def round_intro(self):
