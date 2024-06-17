@@ -9,11 +9,12 @@ from scripts import sounds
 from scripts.utils import rotate_vector, probability
 
 soldiers_death_sounds = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'sounds',
-                                        'death_sounds'))
+                                                     'death_sounds'))
 
 
-class Enemy:
-    def __init__(self, location, aim):
+class Zombie:
+    def __init__(self, location):
+        self.death_sound = sounds.death_sounds[random.randrange(0, 8)]
         self.frames_lived = 1
         self.aim = aim
         self.location = location
@@ -98,7 +99,7 @@ class Soldier(Enemy):
                  self.relative_location[1] + math.ceil(20 * self.size)],
                 self.color, math.ceil(1+1*self.size))
 
-        # bbox
+        # angry face when close
         if self.frames_lived > 1400:
             cv.line(photo, [self.relative_location[0] - math.ceil(6 * self.size),
                             self.relative_location[1] - math.ceil(12.5 * self.size)],
@@ -115,8 +116,7 @@ class Soldier(Enemy):
             cv.circle(photo, [self.relative_location[0], self.relative_location[1] - math.ceil(5 * self.size)],
                       math.ceil(2.5 * self.size), 0, -1)
 
-
-class Enemies:
+class Zombies:
     def __init__(self, aim, spawn_chance, image_shape, horizon_line):
         self.enemies_list = []
         self.spawn_chance = spawn_chance
@@ -128,18 +128,16 @@ class Enemies:
         if probability(self.spawn_chance):
             location = [random.randrange(600, self.image_shape[1] - 600),
                         random.randrange(self.horizon_line - 100, self.horizon_line + 100)]
-            self.enemies_list.append(Soldier(location, self.aim))
+            self.enemies_list.append(Zombie(location))
 
     def update_frame(self, frame):
         health_down = False
         for enemy in self.enemies_list[::-1]:
             enemy.draw_on_image(frame)
             enemy.update()
-            if isinstance(enemy, Soldier) and enemy.frames_lived == 1400:
+            if isinstance(enemy, Zombie) and enemy.frames_lived == 1400:
                 sounds.screaming.play()
-            if isinstance(enemy, Soldier) and enemy.frames_lived > 1700:
+            if isinstance(enemy, Zombie) and enemy.frames_lived > 1700:
                 if enemy.frames_lived % 300 == 0:
                     health_down = True
         return health_down
-
-

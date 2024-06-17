@@ -10,7 +10,7 @@ from scripts.aim import Aim
 from scripts.utils import put_round_text, probability_two, probability
 from scripts.cut_scenes import you_won_animation, you_lose_animation
 from scripts.weapons import Weapon
-from scripts.enemies import Enemies
+from scripts.zombies import Zombies
 from scripts.time_and_score import TimeCountdown
 
 
@@ -19,7 +19,7 @@ class Round:
                  spawn_rate, headers):
         self.original_image = image
         self.aim = Aim(image)
-        self.enemies = Enemies(self.aim, spawn_rate, image.shape, horizon_line)
+        self.enemies = Zombies(self.aim, spawn_rate, image.shape, horizon_line)
         self.weapon = Weapon(sniper_max_ammo, launcher_ammo, sniper_zoom, self.aim, self.enemies.enemies_list)
         self.timer = TimeCountdown(time)
         self.round_music = round_music
@@ -53,7 +53,7 @@ class Round:
             you_won_animation(frame)
             return True
         for enemy in self.enemies.enemies_list:
-            enemy.show_arrow(frame)
+            enemy.draw_arrow(frame, self.aim)
 
         return frame
 
