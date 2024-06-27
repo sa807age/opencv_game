@@ -8,8 +8,8 @@ from scripts.utils import probability_two
 class Aim:
     def __init__(self, image):
         self.image_size = image.shape
-        self._x = image.shape[0] // 2
-        self._y = image.shape[1] // 2
+        self._x = image.shape[1] // 2
+        self._y = image.shape[0] // 2
         self.breath = 0
         self.scope_y_movement = 1
 
@@ -28,7 +28,7 @@ class Aim:
 
     @y.setter
     def y(self, new_y):
-        if 410 < new_y < self.image_size[1] - 410:
+        if 400 < new_y < self.image_size[0] - 400:
             self._y = new_y
 
     def move_aim(self, pixels_to_move) -> None:
