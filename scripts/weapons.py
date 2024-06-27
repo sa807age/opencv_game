@@ -4,6 +4,7 @@ import keyboard as kb
 import numpy as np
 import cv2 as cv
 
+from scripts.zombies import Zombie
 from scripts.utils import draw_image_on_image
 from scripts import sounds
 
@@ -15,7 +16,7 @@ missile_icon = cv.resize(cv.imread(missile_path, -1), (70, 70))
 
 
 class Weapon:
-    def __init__(self, sniper_max_ammo, launcher_ammo, sniper_zoom, aim, enemies_list):
+    def __init__(self, sniper_max_ammo, launcher_ammo, sniper_zoom, aim):
         self.current_weapon = 'launcher'
         self.sniper_max_ammo = sniper_max_ammo
         self.sniper_ammo = sniper_max_ammo
@@ -24,7 +25,6 @@ class Weapon:
         self.status = 'launcher'
         self.sniper_zoom = sniper_zoom
         self.aim = aim
-        self.enemies_list = enemies_list
 
     def update_frame(self, frame):
         if self.current_weapon == 'sniper':
@@ -44,7 +44,7 @@ class Weapon:
                       int(600-(600/self.sniper_zoom)):int(600+(600/self.sniper_zoom)), :]
         frame = cv.resize(frame, (1200, 800))
         blank_image = np.zeros((800, 1200), dtype=np.uint8)
-        sniper_mask = cv.circle(blank_image, (600, 400), 300, 255, -1)
+        sniper_mask = cv.circle(blank_image, (600, 400), 300, [255, 255, 255], -1)
         image_with_scope = cv.bitwise_and(frame, frame, mask=sniper_mask)
         cv.line(image_with_scope, (550, 400), (650, 400), (0, 0, 255), 1, cv.LINE_AA)
         cv.line(image_with_scope, (600, 350), (600, 450), (0, 0, 255), 1, cv.LINE_AA)
@@ -125,11 +125,11 @@ class Weapon:
             self.animation_index += 1
 
     def shoot_bullet(self):
-        for enemy in self.enemies_list:
-            if enemy.bbox[0] < self.aim.x < enemy.bbox[0] + enemy.bbox[2] and enemy.bbox[1] <\
-                    self.aim.y < enemy.bbox[1] + enemy.bbox[3]:
-                enemy.kill(self.enemies_list)
-                break
+        for zombie in Zombie.zombies:
+            bbox = zombie.get_bbox()
+            if bbox[0] < self.aim.x < bbox[0] + bbox[2] and bbox[1] < self.aim.y < bbox[1] + bbox[3]:
+                zombie.kill()
+                return
 
     def reload(self):
         if self.animation_index is None:
@@ -238,8 +238,7 @@ class Weapon:
     def update_explosion(self):
         if self.animation_index is None:
             self.animation_index = 1
-            while self.enemies_list:
-                self.enemies_list[0].kill(self.enemies_list)
+            Zombie.kill_all()
         brightness = 250-self.animation_index*3
         if self.animation_index % 30 < 15:
             pixel = [brightness, brightness, 255]

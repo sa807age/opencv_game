@@ -13,19 +13,45 @@ soldiers_death_sounds = os.path.abspath(os.path.join(os.path.dirname(__file__), 
 
 
 class Zombie:
+    y_location = 1000
+    spawn_chance = 1 / 200
+    zombies = []
+
     def __init__(self, location):
         self.frames_lived = 1
         self.location = location
         self.color = [random.randrange(0, 50), random.randrange(0, 255), random.randrange(0, 50)]
         self.size = (self.frames_lived ** 2) * 0.00001
 
+    @staticmethod
+    def kill_all():
+        Zombie.zombies = []
+
+    @staticmethod
+    def maybe_add(image_shape):
+        if probability(Zombie.spawn_chance):
+            location = [random.randrange(600, image_shape[1] - 600),
+                        Zombie.y_location + random.randrange(-100, 100)]
+            Zombie.zombies.append(Zombie(location))
+
+    @staticmethod
+    def update_frame(frame, aim):
+        for zombie in Zombie.zombies[::-1]:
+            zombie.draw_on_image(frame, aim)
+            if zombie.update():
+                return True
+
     def location_to_relative(self, aim):
         return [600 - aim.x + self.location[0], 400 - aim.y + self.location[1]]
 
-    def kill(self, enemies_list: list):
+    def kill(self):
         death_sounds[random.randrange(0, 8)].play()
-        enemies_list.remove(self)
+        self.zombies.remove(self)
         del self
+
+    def get_bbox(self):
+        return [math.ceil(self.location[0] - 10 * self.size), math.ceil(self.location[1] - 20 * self.size),
+                math.ceil(20 * self.size), math.ceil(40 * self.size)]
 
     def draw_arrow(self, frame, aim):
         arrow_color = (0, int(255 * (1600 - self.frames_lived) / 1600), int(255 * self.frames_lived / 1600))
@@ -49,6 +75,11 @@ class Zombie:
             self.location[1] += 1
         self.frames_lived += 1
         self.size = (self.frames_lived ** 2) * 0.00001
+        if self.frames_lived == 1400:
+            screaming.play()
+        if self.frames_lived > 2000:
+            return True
+        return False
 
     def draw_on_image(self, photo: np.ndarray, aim):
         relative_location = self.location_to_relative(aim)
@@ -103,30 +134,3 @@ class Zombie:
         cv.circle(photo,
                   [relative_location[0] - math.ceil(5 * self.size), relative_location[1] - math.ceil(10 * self.size)],
                   math.ceil(0.2 * self.size), [0, 0, 0], -1)
-
-
-class Zombies:
-    def __init__(self, aim, spawn_chance, image_shape, horizon_line):
-        self.enemies_list = []
-        self.spawn_chance = spawn_chance
-        self.image_shape = image_shape
-        self.aim = aim
-        self.horizon_line = horizon_line
-
-    def maybe_add_soldier(self):
-        if probability(self.spawn_chance):
-            location = [random.randrange(600, self.image_shape[1] - 600),
-                        random.randrange(self.horizon_line - 100, self.horizon_line + 100)]
-            self.enemies_list.append(Zombie(location))
-
-    def update_frame(self, frame):
-        health_down = False
-        for enemy in self.enemies_list[::-1]:
-            enemy.draw_on_image(frame, self.aim)
-            enemy.update()
-            if isinstance(enemy, Zombie) and enemy.frames_lived == 1400:
-                screaming.play()
-            if isinstance(enemy, Zombie) and enemy.frames_lived > 1700:
-                if enemy.frames_lived % 300 == 0:
-                    health_down = True
-        return health_down

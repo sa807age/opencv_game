@@ -36,7 +36,7 @@ def play_tutorial():
     round_img_path = 'media/photos/first_round.jpg'
     round_img = cv.imread(round_img_path)
     tutorial_round = Round(image=round_img, sniper_max_ammo=5, launcher_ammo=3, sniper_zoom=2, time=-1,
-                           round_music=game_music1, horizon_line=2600, soldier_spawn_rate=1 / 1000000000,
+                           round_music=game_music1, y_location=2600, soldier_spawn_rate=1 / 1000000000,
                            headers=['Tutorial', ''])
     # adjustment time phase
     for _ in range(200):

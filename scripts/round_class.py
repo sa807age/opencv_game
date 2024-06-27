@@ -4,26 +4,26 @@ import time
 import numpy as np
 import cv2 as cv
 import keyboard as kb
-import random
 
 from scripts.aim import Aim
-from scripts.utils import put_round_text, probability_two, probability
+from scripts.utils import put_round_text
 from scripts.cut_scenes import you_won_animation, you_lose_animation
 from scripts.weapons import Weapon
-from scripts.zombies import Zombies
+from scripts.zombies import Zombie
 from scripts.time_and_score import TimeCountdown
 
 
 class Round:
-    def __init__(self, image, sniper_max_ammo, launcher_ammo, sniper_zoom, time, round_music, horizon_line,
-                 spawn_rate, headers):
+    def __init__(self, image, sniper_max_ammo, launcher_ammo, sniper_zoom, time, round_music, y_location,
+                 spawn_chance, headers):
         self.original_image = image
         self.aim = Aim(image)
-        self.enemies = Zombies(self.aim, spawn_rate, image.shape, horizon_line)
-        self.weapon = Weapon(sniper_max_ammo, launcher_ammo, sniper_zoom, self.aim, self.enemies.enemies_list)
+        self.weapon = Weapon(sniper_max_ammo, launcher_ammo, sniper_zoom, self.aim)
         self.timer = TimeCountdown(time)
         self.round_music = round_music
         self.headers = headers
+        Zombie.y_location = y_location
+        Zombie.spawn_chance = spawn_chance
 
     def load_frame(self) -> [np.array, bool]:
         """
@@ -41,9 +41,9 @@ class Round:
         frame = copy.deepcopy(self.original_image[self.aim.y - 400:self.aim.y + 400,
                               self.aim.x - 600:self.aim.x + 600, :])
         # maybe add zombie
-        self.enemies.maybe_add_soldier()
+        Zombie.maybe_add(self.original_image.shape)
         # check if zombies got to player
-        you_lose = self.enemies.update_frame(frame)
+        you_lose = Zombie.update_frame(frame, self.aim)
         if you_lose:
             you_lose_animation(frame)
             return False
