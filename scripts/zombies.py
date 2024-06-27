@@ -6,15 +6,13 @@ import cv2 as cv
 import numpy as np
 
 from scripts.sounds import death_sounds, screaming
-from scripts.utils import rotate_vector, probability
+from scripts.utils import rotate_vector, probability, probability_two
 
 soldiers_death_sounds = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'sounds',
                                                      'death_sounds'))
 
 
 class Zombie:
-    y_location = 1000
-    spawn_chance = 1 / 200
     zombies = []
 
     def __init__(self, location):
@@ -28,11 +26,8 @@ class Zombie:
         Zombie.zombies = []
 
     @staticmethod
-    def maybe_add(image_shape):
-        if probability(Zombie.spawn_chance):
-            location = [random.randrange(600, image_shape[1] - 600),
-                        Zombie.y_location + random.randrange(-100, 100)]
-            Zombie.zombies.append(Zombie(location))
+    def add_zombie(location):
+        Zombie.zombies.append(Zombie(location))
 
     @staticmethod
     def update_frame(frame, aim):

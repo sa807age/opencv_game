@@ -1,12 +1,13 @@
 import copy
 import time
+import random
 
 import numpy as np
 import cv2 as cv
 import keyboard as kb
 
 from scripts.aim import Aim
-from scripts.utils import put_round_text
+from scripts.utils import put_round_text, probability
 from scripts.cut_scenes import you_won_animation, you_lose_animation
 from scripts.weapons import Weapon
 from scripts.zombies import Zombie
@@ -14,7 +15,7 @@ from scripts.time_and_score import TimeCountdown
 
 
 class Round:
-    def __init__(self, image, sniper_max_ammo, launcher_ammo, sniper_zoom, time, round_music, y_location,
+    def __init__(self, image, sniper_max_ammo, launcher_ammo, sniper_zoom, time, round_music, horizon_line,
                  spawn_chance, headers):
         self.original_image = image
         self.aim = Aim(image)
@@ -22,8 +23,8 @@ class Round:
         self.timer = TimeCountdown(time)
         self.round_music = round_music
         self.headers = headers
-        Zombie.y_location = y_location
-        Zombie.spawn_chance = spawn_chance
+        self.horizon_line = horizon_line
+        self.spawn_chance = spawn_chance
 
     def load_frame(self) -> [np.array, bool]:
         """
@@ -41,7 +42,10 @@ class Round:
         frame = copy.deepcopy(self.original_image[self.aim.y - 400:self.aim.y + 400,
                               self.aim.x - 600:self.aim.x + 600, :])
         # maybe add zombie
-        Zombie.maybe_add(self.original_image.shape)
+        if probability(self.spawn_chance):
+            location = [random.randrange(600, self.original_image.shape[1] - 600),
+                        self.horizon_line + random.randrange(-50, 50)]
+            Zombie.add_zombie(location)
         # check if zombies got to player
         you_lose = Zombie.update_frame(frame, self.aim)
         if you_lose:
@@ -76,6 +80,7 @@ class Round:
             frame = self.load_frame()
             # if frame is not np.Array: that means that the game is over
             if isinstance(frame, bool):
+                Zombie.kill_all()
                 return frame
             cv.imshow('game', frame)
             cv.waitKey(5)
