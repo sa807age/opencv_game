@@ -42,7 +42,7 @@ class Zombie:
                 return True
 
     def location_to_relative(self, aim):
-        return [600 - aim.x + self.location[0], 400 - aim.y + self.location[1]]
+        return [int(600 - aim.x + self.location[0]), int(400 - aim.y + self.location[1])]
 
     def kill(self):
         death_sounds[random.randrange(0, 8)].play()
@@ -69,12 +69,11 @@ class Zombie:
                 arrow_color, 10)
 
     def update(self):
-        if random.randrange(0, 5) == 4:
+        if probability(0.5):
             self.location[0] += random.randrange(-1, 2)
-            self.location[1] += random.randrange(-1, 2)
-            self.location[1] += 1
+        self.location[1] += 0.12
         self.frames_lived += 1
-        self.size = (self.frames_lived ** 2) * 0.00001
+        self.size = (1.0017 ** self.frames_lived)
         if self.frames_lived == 1400:
             screaming.play()
         if self.frames_lived > 2000:
