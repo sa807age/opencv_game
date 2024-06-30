@@ -4,6 +4,7 @@ import time
 import textwrap
 import random
 
+from scripts.zombies import Zombie
 from scripts.round_class import Round
 from scripts.sounds import game_music1, first_speech, last_speech
 
@@ -20,11 +21,11 @@ def display_text(image, text):
 
         gap = textsize[1] + 15
 
-        y = int(650+textsize[1]) + i * gap
+        y = int(650 + textsize[1]) + i * gap
         x = int((image.shape[1] - textsize[0]) / 2)
 
         text_w, text_h = textsize
-        cv.rectangle(image, (x - 3, y+8), (x+3+text_w, y-text_h-6), (0, 0, 0), -1)
+        cv.rectangle(image, (x - 3, y + 8), (x + 3 + text_w, y - text_h - 6), (0, 0, 0), -1)
         cv.putText(image, line, (x, y), font,
                    font_size,
                    (255, 255, 255),
@@ -36,7 +37,7 @@ def play_tutorial():
     round_img_path = 'media/photos/first_round.jpg'
     round_img = cv.imread(round_img_path)
     tutorial_round = Round(image=round_img, sniper_max_ammo=5, launcher_ammo=3, sniper_zoom=2, time=-1,
-                           round_music=game_music1, y_location=2600, soldier_spawn_rate=1 / 1000000000,
+                           round_music=SoundManager.game_music1, horizon_line=2600, spawn_chance=0,
                            headers=['Tutorial', ''])
     # adjustment time phase
     for _ in range(200):
@@ -71,7 +72,7 @@ def play_tutorial():
         cv.waitKey(5)
         if time_from_start == 5:
             break
-    tutorial_round.enemies.add_soldier([800, 2600])
+    Zombie.add_zombie([800, 2600])
     while True:
         if kb.is_pressed('esc'):
             quit()
@@ -80,7 +81,7 @@ def play_tutorial():
         cv.putText(frame, 'find it!', (500, 200), 3, 2, (0, 0, 0), 3)
         cv.imshow('game', frame)
         cv.waitKey(5)
-        zombie_bbox = tutorial_round.enemies.enemies_list[0].bbox
+        zombie_bbox = Zombie.zombies[0].get_bbox()
         if (zombie_bbox[0] < tutorial_round.aim.x < zombie_bbox[0] + zombie_bbox[2] and
                 zombie_bbox[1] < tutorial_round.aim.y < zombie_bbox[1] + zombie_bbox[3]):
             break
@@ -122,8 +123,8 @@ def play_tutorial():
         cv.waitKey(5)
     for _ in range(100):
         frame = tutorial_round.load_frame()
-        tutorial_round.enemies.add_soldier([random.randrange(600, tutorial_round.original_image.shape[1] - 600),
-                                            random.randrange(tutorial_round.horizon_line - 100,
+        Zombie.add_zombie([random.randrange(600, tutorial_round.original_image.shape[1] - 600),
+                           random.randrange(tutorial_round.horizon_line - 100,
                                             tutorial_round.horizon_line + 100)])
         cv.imshow('game', frame)
         cv.waitKey(5)
@@ -203,4 +204,3 @@ def show_last_speech(time_from_start, frame):
         display_text(frame, "Good luck, and may you come back in one piece.")
     if 20 < time_from_start < 22:
         display_text(frame, "Dismissed!")
-
