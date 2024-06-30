@@ -6,7 +6,7 @@ import cv2 as cv
 
 from scripts.zombies import Zombie
 from scripts.utils import draw_image_on_image
-from scripts import sounds
+from scripts.sounds import SoundManager
 
 
 bullet_path = 'media/photos/bullet.png'
@@ -57,7 +57,7 @@ class Weapon:
     def scope_zoom_in(self, frame):
         if self.animation_index is None:
             self.animation_index = 1
-            sounds.click1.play()
+            SoundManager.click1.play()
         zoom_amount = 1 + (self.animation_index - 1) * 0.1
         resized_and_moved_image = frame[int(400-(400/zoom_amount)):int(400+(400/zoom_amount)),
                                         int(600-(600/zoom_amount)):int(600+(600/zoom_amount)), :]
@@ -72,7 +72,7 @@ class Weapon:
     def scope_zoom_out(self, frame):
         if self.animation_index is None:
             self.animation_index = 10 * self.sniper_zoom
-            sounds.click1.play()
+            SoundManager.click1.play()
         zoom_amount = 1 + (self.animation_index - 1) * 0.1
         resized_and_moved_image = frame[int(400-(400/zoom_amount)):int(400+(400/zoom_amount)),
                                         int(600-(600/zoom_amount)):int(600+(600/zoom_amount)), :]
@@ -135,7 +135,7 @@ class Weapon:
         if self.animation_index is None:
             self.animation_index = 1
         if self.animation_index % 75 == 0:
-            sounds.click2.play()
+            SoundManager.click2.play()
             self.sniper_ammo += 1
             self.animation_index += 1
         else:
@@ -163,16 +163,16 @@ class Weapon:
                 self.status = 'zoom_out'
             if kb.is_pressed('r'):
                 if self.sniper_ammo < 100:
-                    sounds.reloading.play()
+                    SoundManager.reloading.play()
                     self.current_weapon = 'reloading'
             if kb.is_pressed('space'):
                 if self.sniper_ammo > 0:
                     self.sniper_ammo -= 1
-                    sounds.sniper_shot.play()
+                    SoundManager.sniper_shot.play()
                     self.shoot_bullet()
                     self.status = 'shot_animation'
                 else:
-                    sounds.no_ammo.play()
+                    SoundManager.no_ammo.play()
                     self.status = 'cooldown'
             frame = self.create_scope_image(frame)
         elif self.status == 'shot_animation':
@@ -198,20 +198,20 @@ class Weapon:
             if kb.is_pressed('space'):
                 if self.sniper_ammo > 0:
                     self.sniper_ammo -= 1
-                    sounds.sniper_shot.play()
+                    SoundManager.sniper_shot.play()
                     self.shoot_bullet()
                     self.status = 'shot_animation'
             if kb.is_pressed('g'):
                 if not self.launcher_ammo:
-                    sounds.no_ammo.play()
+                    SoundManager.no_ammo.play()
                     self.status = 'cooldown'
                 else:
                     self.launcher_ammo -= 1
-                    sounds.rocket.play()
+                    SoundManager.rocket.play()
                     self.status = 'missile_animation'
             if kb.is_pressed('r'):
                 if self.sniper_ammo < 100:
-                    sounds.reloading.play()
+                    SoundManager.reloading.play()
                     self.current_weapon = 'reloading'
         elif self.status == 'boom':
             frame = self.update_explosion()

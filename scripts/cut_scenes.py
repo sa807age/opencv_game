@@ -3,8 +3,7 @@ import time
 from copy import copy
 import keyboard
 
-from scripts import sounds
-from scripts.sounds import click2, opening_sound, you_win, zombies_sound
+from scripts.sounds import SoundManager
 
 
 def welcome_screen():
@@ -12,12 +11,12 @@ def welcome_screen():
         return [100, 100, 200] if selection == text_number else [0, 0, 100]
 
     video = cv.VideoCapture('media/videos/bunker.mp4')
-    opening_sound.play()
-    zombies_sound.play()
+    SoundManager.opening_sound.play()
+    SoundManager.zombies_sound.play()
     frame = None
     for _ in range(100):
         if keyboard.is_pressed('q'):
-            sounds.mixer.stop()
+            SoundManager.mixer.stop()
             return None
         image_read_correctly, frame = video.read()
         cv.imshow('game', frame)
@@ -32,9 +31,9 @@ def welcome_screen():
     while True:
         frame_copy = copy(frame)
         if keyboard.is_pressed('space'):
-            click2.play()
+            SoundManager.click2.play()
             if select == 1:
-                opening_sound.fadeout(1000)
+                SoundManager.opening_sound.fadeout(1000)
                 cv.waitKey(200)
                 break
             elif select == 2:
@@ -43,11 +42,11 @@ def welcome_screen():
                 quit()
 
         if keyboard.is_pressed('w'):
-            click2.play()
+            SoundManager.click2.play()
             select -= 1 if select > 1 else 0
 
         if keyboard.is_pressed('s'):
-            click2.play()
+            SoundManager.click2.play()
             select += 1 if select < 3 else 0
 
         cv.putText(frame_copy, 'Play', (200, 300), 3, 2, show_selection(select, 1), thickness=4)
@@ -62,8 +61,8 @@ def you_won_animation(frame):
     def show_selection(selection, text_number):
         return [0, 255, 0] if selection == text_number else [0, 150, 0]
 
-    sounds.mixer.stop()
-    you_win.play()
+    SoundManager.mixer.stop()
+    SoundManager.you_win.play()
     cv.putText(frame, 'YOU WON', (200, 200), 1, 5, (100, 255, 100), 10)
     cv.imshow('game', frame)
     cv.waitKey(20)
@@ -72,18 +71,18 @@ def you_won_animation(frame):
     while True:
         frame_copy = copy(frame)
         if keyboard.is_pressed('space'):
-            click2.play()
+            SoundManager.click2.play()
             if select == 1:
                 return
             elif select == 2:
                 quit()
 
         if keyboard.is_pressed('w'):
-            click2.play()
+            SoundManager.click2.play()
             select -= 1 if select > 1 else 0
 
         if keyboard.is_pressed('s'):
-            click2.play()
+            SoundManager.click2.play()
             select += 1 if select < 2 else 0
 
         cv.putText(frame_copy, 'Continue', (200, 400), 3, 2, show_selection(select, 1), thickness=4)
@@ -96,8 +95,8 @@ def you_won_animation(frame):
 def you_lose_animation(frame):
     def show_selection(selection, text_number):
         return [0, 0, 255] if selection == text_number else [0, 0, 150]
-    sounds.mixer.stop()
-    sounds.death_sound1.play()
+    SoundManager.mixer.stop()
+    SoundManager.death_sound1.play()
     cv.putText(frame, 'YOU DIED', (200, 200), 1, 5, (100, 100, 255), 10)
     cv.imshow('game', frame)
     cv.waitKey(20)
@@ -106,18 +105,18 @@ def you_lose_animation(frame):
     while True:
         frame_copy = copy(frame)
         if keyboard.is_pressed('space'):
-            click2.play()
+            SoundManager.click2.play()
             if select == 1:
                 return
             elif select == 2:
                 quit()
 
         if keyboard.is_pressed('w'):
-            click2.play()
+            SoundManager.click2.play()
             select -= 1 if select > 1 else 0
 
         if keyboard.is_pressed('s'):
-            click2.play()
+            SoundManager.click2.play()
             select += 1 if select < 2 else 0
 
         cv.putText(frame_copy, 'Try Again', (200, 400), 3, 2, show_selection(select, 1), thickness=4)

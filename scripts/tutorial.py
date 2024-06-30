@@ -6,7 +6,7 @@ import random
 
 from scripts.zombies import Zombie
 from scripts.round_class import Round
-from scripts.sounds import game_music1, first_speech, last_speech
+from scripts.sounds import SoundManager
 
 
 def display_text(image, text):
@@ -47,7 +47,7 @@ def play_tutorial():
         cv.imshow('game', frame)
         cv.waitKey(5)
     starting_time = time.time()
-    first_speech.play()
+    SoundManager.first_speech.play()
     while True:
         if kb.is_pressed('esc'):
             quit()
@@ -157,7 +157,7 @@ def play_tutorial():
         cv.imshow('game', frame)
         cv.waitKey(5)
     starting_time = time.time()
-    last_speech.play()
+    SoundManager.last_speech.play()
     while True:
         if kb.is_pressed('esc'):
             quit()

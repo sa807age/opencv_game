@@ -5,8 +5,8 @@ import random
 import cv2 as cv
 import numpy as np
 
-from scripts.sounds import death_sounds, screaming
-from scripts.utils import rotate_vector, probability, probability_two
+from scripts.sounds import SoundManager
+from scripts.utils import rotate_vector, probability
 
 soldiers_death_sounds = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'sounds',
                                                      'death_sounds'))
@@ -40,7 +40,7 @@ class Zombie:
         return [int(600 - aim.x + self.location[0]), int(400 - aim.y + self.location[1])]
 
     def kill(self):
-        death_sounds[random.randrange(0, 8)].play()
+        SoundManager.death_sounds[random.randrange(0, 8)].play()
         self.zombies.remove(self)
         del self
 
@@ -70,7 +70,7 @@ class Zombie:
         self.frames_lived += 1
         self.size = (1.0017 ** self.frames_lived)
         if self.frames_lived == 1400:
-            screaming.play()
+            SoundManager.screaming.play()
         if self.frames_lived > 2000:
             return True
         return False
