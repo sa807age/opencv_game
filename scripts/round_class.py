@@ -47,7 +47,7 @@ class Round:
                         self.horizon_line + random.randrange(-50, 50)]
             Zombie.add_zombie(location)
         # check if zombies got to player
-        you_lose = Zombie.update_frame(frame, self.aim)
+        you_lose = Zombie.draw_zombies(frame, self.aim)
         if you_lose:
             you_lose_animation(frame)
             return False
