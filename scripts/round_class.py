@@ -18,7 +18,7 @@ class Round:
     def __init__(self, image, sniper_max_ammo, launcher_ammo, sniper_zoom, time, round_music, horizon_line,
                  spawn_chance, headers):
         self.original_image = image
-        self.aim = Aim(image)
+        self.aim = Aim(image.shape)
         self.weapon = Weapon(sniper_max_ammo, launcher_ammo, sniper_zoom, self.aim)
         self.timer = TimeCountdown(time)
         self.round_music = round_music
