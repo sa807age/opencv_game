@@ -6,10 +6,10 @@ from scripts.utils import probability_two
 
 
 class Aim:
-    def __init__(self, image):
-        self.image_size = image.shape
-        self._x = image.shape[1] // 2
-        self._y = image.shape[0] // 2
+    def __init__(self, image_shape):
+        self.image_shape = image_shape
+        self._x = image_shape[1] // 2
+        self._y = image_shape[0] // 2
         self.breath = 0
         self.scope_y_movement = 1
 
@@ -19,7 +19,7 @@ class Aim:
 
     @x.setter
     def x(self, new_x):
-        if 620 < new_x < self.image_size[1] - 620:
+        if 620 < new_x < self.image_shape[1] - 620:
             self._x = new_x
 
     @property
@@ -28,7 +28,7 @@ class Aim:
 
     @y.setter
     def y(self, new_y):
-        if 400 < new_y < self.image_size[0] - 400:
+        if 400 < new_y < self.image_shape[0] - 400:
             self._y = new_y
 
     def move_aim(self, pixels_to_move) -> None:
