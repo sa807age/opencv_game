@@ -6,8 +6,12 @@ from scripts.utils import probability_two
 
 
 class Aim:
+
     def __init__(self, image_shape):
-        self.image_shape = image_shape
+        self.max_x = image_shape[1] - 620
+        self.min_x = 640
+        self.max_y = image_shape[0] - 400
+        self.min_y = 400
         self._x = image_shape[1] // 2
         self._y = image_shape[0] // 2
         self.breath = 0
@@ -19,7 +23,7 @@ class Aim:
 
     @x.setter
     def x(self, new_x):
-        if 620 < new_x < self.image_shape[1] - 620:
+        if self.min_x < new_x < self.max_x - 620:
             self._x = new_x
 
     @property
@@ -28,7 +32,7 @@ class Aim:
 
     @y.setter
     def y(self, new_y):
-        if 400 < new_y < self.image_shape[0] - 400:
+        if self.min_y < new_y < self.max_y - 400:
             self._y = new_y
 
     def move_aim(self, pixels_to_move) -> None:
