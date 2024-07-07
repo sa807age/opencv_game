@@ -36,7 +36,7 @@ def display_text(image, text):
 def play_tutorial():
     round_img_path = 'media/photos/first_round.jpg'
     round_img = cv.imread(round_img_path)
-    tutorial_round = Round(image=round_img, sniper_max_ammo=5, launcher_ammo=3, sniper_zoom=2, time=-1,
+    tutorial_round = Round(image=round_img, sniper_max_ammo=5, launcher_ammo=3, sniper_zoom=2, round_time=None,
                            round_music=SoundManager.game_music1, horizon_line=2600, spawn_chance=0,
                            headers=['Tutorial', ''])
     # adjustment time phase

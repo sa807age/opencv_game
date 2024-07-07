@@ -23,7 +23,7 @@ class Aim:
 
     @x.setter
     def x(self, new_x):
-        if self.min_x < new_x < self.max_x - 620:
+        if self.min_x < new_x < self.max_x:
             self._x = new_x
 
     @property
@@ -32,7 +32,7 @@ class Aim:
 
     @y.setter
     def y(self, new_y):
-        if self.min_y < new_y < self.max_y - 400:
+        if self.min_y < new_y < self.max_y:
             self._y = new_y
 
     def move_aim(self, pixels_to_move) -> None:

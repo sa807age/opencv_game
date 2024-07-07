@@ -13,8 +13,6 @@ class TimeCountdown:
         The total countdown time in seconds.
     starting_time : float
         The starting time when the countdown begins.
-    time_left : int
-        The time left in the countdown.
     """
 
     def __init__(self, total_time: int):
@@ -28,7 +26,6 @@ class TimeCountdown:
         """
         self.starting_time = time.time()
         self.total_time = total_time
-        self.time_left = total_time
 
     def display_time(self, frame: cv.Mat) -> bool:
         """
@@ -44,9 +41,10 @@ class TimeCountdown:
         bool
             True if the countdown has ended, else False.
         """
-        self.time_left = self.total_time + math.floor(self.starting_time - time.time())
-
-        if self.time_left > 0:
-            cv.putText(frame, f'Time left: {self.time_left}', (10, 30), 5, 1, (0, 130, 0), 2)
+        if self.total_time is None:
+            return False
+        time_left = self.total_time + math.floor(self.starting_time - time.time())
+        if time_left > 0:
+            cv.putText(frame, f'Time left: {time_left}', (10, 30), 5, 1, (0, 130, 0), 2)
             return False
         return True
