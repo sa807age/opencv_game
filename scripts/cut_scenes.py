@@ -86,7 +86,7 @@ def you_won_animation(frame):
             select += 1 if select < 2 else 0
 
         cv.putText(frame_copy, 'Continue', (200, 400), 3, 2, show_selection(select, 1), thickness=4)
-        cv.putText(frame_copy, 'Quit (like a bitch)', (200, 500), 3, 2, show_selection(select, 2), thickness=3)
+        cv.putText(frame_copy, 'Quit', (200, 500), 3, 2, show_selection(select, 2), thickness=3)
 
         cv.imshow('game', frame_copy)
         cv.waitKey(200)
@@ -120,7 +120,7 @@ def you_lose_animation(frame):
             select += 1 if select < 2 else 0
 
         cv.putText(frame_copy, 'Try Again', (200, 400), 3, 2, show_selection(select, 1), thickness=4)
-        cv.putText(frame_copy, 'Quit (like a bitch)', (200, 500), 3, 2, show_selection(select, 2), thickness=3)
+        cv.putText(frame_copy, 'Quit', (200, 500), 3, 2, show_selection(select, 2), thickness=3)
 
         cv.imshow('game', frame_copy)
         cv.waitKey(200)
