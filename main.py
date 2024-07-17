@@ -32,5 +32,5 @@ Round(image=round_img, sniper_max_ammo=1, launcher_ammo=2, sniper_zoom=3, round_
 round_img_path = 'media/photos/forth_round.jpg'
 round_img = cv.imread(round_img_path)
 Round(image=round_img, sniper_max_ammo=1000, launcher_ammo=3, sniper_zoom=1, round_time=120,
-      round_music=SoundManager.game_music2, horizon_line=1800, spawn_chance=1 / 50,
+      round_music=SoundManager.game_music2, horizon_line=1800, spawn_chance=1 / 20,
       headers=['Last Round', 'Seiko Mode']).play_round()
