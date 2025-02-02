@@ -5,15 +5,15 @@ from scripts.cut_scenes import welcome_screen
 from scripts.sounds import SoundManager
 from scripts.tutorial import play_tutorial
 
-welcome_screen()
-play_tutorial()
+#welcome_screen()
+#play_tutorial()
 
 
-round_img_path = 'media/photos/first_round.jpg'
+round_img_path = 'media/photos/thumb-1920-693692 (1).jpg'
 round_img = cv.imread(round_img_path)
 Round(image=round_img, sniper_max_ammo=5, launcher_ammo=1, sniper_zoom=2, round_time=45,
       round_music=SoundManager.game_music1,
-      horizon_line=2600, spawn_chance=1 / 200, headers=['Round 1', "Let's go"]).play_round()
+      horizon_line=500, spawn_chance=1 / 200, headers=['Round 1', "Let's go"]).play_round()
 
 
 round_img_path = 'media/photos/second_round.jpg'
